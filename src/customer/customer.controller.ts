@@ -10,6 +10,7 @@ import {
   UseGuards,
   Patch,
   Delete,
+  Request,
 } from '@nestjs/common';
 import { ClassSerializerInterceptor } from '@nestjs/common';
 import { CustomerService } from './customer.service';
@@ -24,6 +25,8 @@ import {
   ApiResponse,
   ApiBearerAuth,
 } from '@nestjs/swagger';
+import { CustomerPartnerPeriodService } from '../auth/customer-partner-period.service';
+import { CreateCustomerPartnerPeriodDto } from '../auth/dto/customer-partner-period.dto';
 
 @ApiTags('Customers')
 @Controller('customers')
@@ -33,7 +36,10 @@ import {
 @SerializeOptions({ strategy: 'excludeAll' })
 // Controller to handle the customers
 export class CustomerController {
-  constructor(private readonly customerService: CustomerService) {}
+  constructor(
+    private readonly customerService: CustomerService,
+    private readonly periodService: CustomerPartnerPeriodService,
+  ) {}
 
   @Post()
   @ApiOperation({ summary: 'Create a new customer' })
@@ -97,5 +103,27 @@ export class CustomerController {
   })
   async remove(@Param('id') id: number) {
     return await this.customerService.remove(id);
+  }
+
+  @Post(':id/contracts')
+  @ApiOperation({ summary: 'Create a new contract for a customer' })
+  @ApiResponse({
+    status: 201,
+    description: 'Contract created successfully',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid data or overlapping contract',
+  })
+  async createContract(
+    @Param('id') customerId: number,
+    @Body() createContractDto: CreateCustomerPartnerPeriodDto,
+    @Request() req,
+  ) {
+    return await this.periodService.create(
+      createContractDto,
+      customerId,
+      req.user.id,
+    );
   }
 }

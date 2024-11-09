@@ -34,9 +34,7 @@ describe('Insurance API (E2E)', () => {
 
     dataSource = moduleFixture.get(DataSource);
 
-    await dataSource.query(`
-      TRUNCATE TABLE "customer", "claim", "partner" RESTART IDENTITY CASCADE;
-    `);
+    await dataSource.runMigrations();
 
     testPartnerName = 'Test Partner';
 
@@ -47,6 +45,10 @@ describe('Insurance API (E2E)', () => {
   });
 
   afterAll(async () => {
+    await dataSource.query(`
+      TRUNCATE TABLE "customer", "claim", "partner", "customer_partner_period" RESTART IDENTITY CASCADE;
+    `);
+    await dataSource.undoLastMigration();
     await app.close();
   }, 10000);
 
@@ -133,9 +135,12 @@ describe('Insurance API (E2E)', () => {
       const response = await request(app.getHttpServer())
         .post('/customers')
         .set('Authorization', `Bearer ${validTokenForTests}`)
-        .send({ email: 'test@example.com', name: 'Test User' })
-        .expect(201);
+        .send({
+          email: 'test@example.com',
+          name: 'Test User',
+        });
 
+      expect(response.status).toBe(201);
       expect(response.body).toHaveProperty('id');
       expect(response.body.email).toBe('test@example.com');
       expect(response.body.name).toBe('Test User');
@@ -155,7 +160,10 @@ describe('Insurance API (E2E)', () => {
       const { body } = await request(app.getHttpServer())
         .post('/customers')
         .set('Authorization', `Bearer ${validTokenForTests}`)
-        .send({ email: 'noclaims@example.com', name: 'No Claims User' });
+        .send({
+          email: 'noclaims@example.com',
+          name: 'No Claims User',
+        });
 
       const response = await request(app.getHttpServer())
         .get(`/customers/${body.id}`)
@@ -181,7 +189,10 @@ describe('Insurance API (E2E)', () => {
       const { body: customer } = await request(app.getHttpServer())
         .post('/customers')
         .set('Authorization', `Bearer ${validTokenForTests}`)
-        .send({ email: 'claimuser@example.com', name: 'Claim User' });
+        .send({
+          email: 'claimuser@example.com',
+          name: 'Claim User',
+        });
 
       await request(app.getHttpServer())
         .post(`/customers/${customer.id}/claims`)
@@ -242,7 +253,10 @@ describe('Insurance API (E2E)', () => {
       const { body: customer } = await request(app.getHttpServer())
         .post('/customers')
         .set('Authorization', `Bearer ${validTokenForTests}`)
-        .send({ email: 'claimuser@example.com', name: 'Claim User' });
+        .send({
+          email: 'claimuser@example.com',
+          name: 'Claim User',
+        });
 
       const response = await request(app.getHttpServer())
         .post(`/customers/${customer.id}/claims`)
@@ -285,7 +299,10 @@ describe('Insurance API (E2E)', () => {
       const { body: customer } = await request(app.getHttpServer())
         .post('/customers')
         .set('Authorization', `Bearer ${validTokenForTests}`)
-        .send({ email: 'batchclaim@example.com', name: 'Batch Claim User' });
+        .send({
+          email: 'batchclaim@example.com',
+          name: 'Batch Claim User',
+        });
 
       const response = await request(app.getHttpServer())
         .post(`/customers/${customer.id}/claims/batch`)
@@ -309,6 +326,42 @@ describe('Insurance API (E2E)', () => {
       expect(response.body).toHaveLength(2);
       expect(response.body[0].title).toBe('Batch Claim 1');
       expect(response.body[1].title).toBe('Batch Claim 2');
+    });
+  });
+
+  describe('/customers/:id/contracts (POST)', () => {
+    it('should fail when creating overlapping contracts for same customer and partner', async () => {
+      // Create a customer first
+      const { body: customer } = await request(app.getHttpServer())
+        .post('/customers')
+        .set('Authorization', `Bearer ${validTokenForTests}`)
+        .send({
+          email: 'overlap@example.com',
+          name: 'Overlap Test User',
+        });
+
+      // Create first contract
+      const response = await request(app.getHttpServer())
+        .post(`/customers/${customer.id}/contracts`)
+        .set('Authorization', `Bearer ${validTokenForTests}`)
+        .send({
+          startDate: new Date('2024-01-01'),
+          endDate: new Date('2024-12-31'),
+        });
+
+      expect(response.status).toBe(201);
+
+      // Try to create overlapping contract
+      const response2 = await request(app.getHttpServer())
+        .post(`/customers/${customer.id}/contracts`)
+        .set('Authorization', `Bearer ${validTokenForTests}`)
+        .send({
+          startDate: new Date('2024-06-01'),
+          endDate: new Date('2025-05-31'),
+        });
+
+      console.log(response2.body);
+      expect(response2.status).toBe(500);
     });
   });
 });
