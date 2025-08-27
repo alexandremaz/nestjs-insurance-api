@@ -1,23 +1,12 @@
-import { IsEmail, IsOptional, IsString } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { createZodDto } from 'nestjs-zod';
+import { z } from 'zod';
+import { createCustomerSchema } from './create-customer.dto';
 
-// DTO to update a customer
-export class UpdateCustomerDto {
-  @ApiProperty({
-    example: 'John Doe',
-    description: 'The full name of the customer',
-    required: false,
-  })
-  @IsString()
-  @IsOptional()
-  name?: string;
+export const updateCustomerSchema = createCustomerSchema.partial().extend({
+  name: z.string().trim().min(1).optional().describe('The full name of the customer'),
+  email: z.email().optional().describe('The email address of the customer'),
+});
 
-  @ApiProperty({
-    example: 'john.doe@example.com',
-    description: 'The email address of the customer',
-    required: false,
-  })
-  @IsEmail()
-  @IsOptional()
-  email?: string;
-}
+export class UpdateCustomerDto extends createZodDto(updateCustomerSchema) {}
+
+export type UpdateCustomer = z.infer<typeof updateCustomerSchema>;

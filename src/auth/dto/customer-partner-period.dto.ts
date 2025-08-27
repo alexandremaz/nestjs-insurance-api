@@ -1,23 +1,10 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsDate, IsOptional } from 'class-validator';
-import { Type } from 'class-transformer';
+import { createZodDto } from 'nestjs-zod';
+import z from 'zod';
 
-export class CreateCustomerPartnerPeriodDto {
-  @ApiProperty({
-    example: '2024-01-01T00:00:00.000Z',
-    description: 'Start date of the period',
-  })
-  @Type(() => Date)
-  @IsDate()
-  @IsNotEmpty()
-  startDate: Date;
+const createCustomerPartnerPeriodSchema = z.object({
+  startDate: z.iso.datetime().transform((isoString) => new Date(isoString)).describe('Start date of the period'),
+  endDate: z.iso.datetime().transform((isoString) => new Date(isoString)).describe('End date of the period (optional)').optional(),
+});
 
-  @ApiProperty({
-    example: '2024-12-31T23:59:59.999Z',
-    description: 'End date of the period (optional)',
-  })
-  @Type(() => Date)
-  @IsDate()
-  @IsOptional()
-  endDate?: Date;
-}
+export class CreateCustomerPartnerPeriodDto extends createZodDto(createCustomerPartnerPeriodSchema) {};
+export type CreateCustomerPartnerPeriod = z.infer<typeof createCustomerPartnerPeriodSchema>;

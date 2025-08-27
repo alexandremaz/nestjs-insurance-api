@@ -7,9 +7,12 @@ import { Partner } from './entities/partner.entity';
 import { ApiTags, ApiOperation, ApiResponse, ApiHeader } from '@nestjs/swagger';
 import {
   CreatePartnerDto,
+  CreatePartnerResponse,
   CreatePartnerResponseDto,
+  LoginResponse,
   LoginResponseDto,
 } from './auth.dto';
+import { ZodSerializerDto } from 'nestjs-zod';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -33,9 +36,10 @@ export class AuthController {
     status: 403,
     description: 'Access denied',
   })
+  @ZodSerializerDto(CreatePartnerResponseDto)
   async createPartner(
     @Body() createPartnerDto: CreatePartnerDto,
-  ): Promise<CreatePartnerResponseDto> {
+  ): Promise<CreatePartnerResponse> {
     const apiKey = await this.authService.generatePartnerApiKey(
       createPartnerDto.partnerName,
     );
@@ -58,7 +62,8 @@ export class AuthController {
     status: 403,
     description: 'Access denied',
   })
-  async login(@GetPartner() partner: Partner): Promise<LoginResponseDto> {
+  @ZodSerializerDto(LoginResponseDto)
+  async login(@GetPartner() partner: Partner): Promise<LoginResponse> {
     return this.authService.loginPartner(partner);
   }
 }

@@ -10,6 +10,7 @@ import {
 } from '@nestjs/swagger';
 import { ClaimResponseDto } from './dto/claim.response.dto';
 import { BatchCreateClaimDto } from './dto/batch-create-claims.dto';
+import { ZodSerializerDto } from 'nestjs-zod';
 
 @ApiTags('Claims')
 @Controller('customers/:customerId/claims')
@@ -30,6 +31,7 @@ export class ClaimController {
     status: 400,
     description: 'Invalid data',
   })
+  @ZodSerializerDto(ClaimResponseDto)
   async create(
     @Param('customerId') customerId: number,
     @Body() createClaimsDto: CreateClaimDto,

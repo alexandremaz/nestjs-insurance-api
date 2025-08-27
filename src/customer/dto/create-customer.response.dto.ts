@@ -1,30 +1,12 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Expose } from 'class-transformer';
+import { createZodDto } from 'nestjs-zod';
+import { z } from 'zod';
 
-// DTO to return the created customer
-export class CreateCustomerResponseDto {
-  @ApiProperty({
-    example: 1,
-    description: 'The customer ID',
-  })
-  @Expose()
-  id: number;
+export const createCustomerResponseSchema = z.object({
+  id: z.number().int().positive().describe('The customer ID'),
+  email: z.email().describe('The customer email address'),
+  name: z.string().min(1).describe('The customer full name'),
+});
 
-  @ApiProperty({
-    example: 'john.doe@example.com',
-    description: 'The customer email address',
-  })
-  @Expose()
-  email: string;
+export class CreateCustomerResponseDto extends createZodDto(createCustomerResponseSchema) {}
 
-  @ApiProperty({
-    example: 'John Doe',
-    description: 'The customer full name',
-  })
-  @Expose()
-  name: string;
-
-  constructor(partial: Partial<CreateCustomerResponseDto>) {
-    Object.assign(this, partial);
-  }
-}
+export type CreateCustomerResponse = z.infer<typeof createCustomerResponseSchema>;

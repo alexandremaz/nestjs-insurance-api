@@ -1,44 +1,26 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Expose, Transform } from 'class-transformer';
-import { Claim } from '../../claim/claim.entity';
+import { createZodDto } from 'nestjs-zod';
+import { z } from 'zod';
 
-// DTO to return a customer from GET /customers/:id endpoint
-export class CustomerResponseDto {
-  @ApiProperty({
-    example: 1,
-    description: 'Unique customer identifier',
-  })
-  @Expose()
-  id: number;
+const claimSchema = z.object({
+  pointValue: z.number(),
+});
 
-  @ApiProperty({
-    example: 'john.doe@example.com',
-    description: 'Customer email address',
-  })
-  @Expose()
-  email: string;
+const customerWithClaimsSchema = z.object({
+  id: z.number().int().positive().describe('Unique customer identifier'),
+  email: z.email().describe('Customer email address'),
+  name: z.string().min(1).describe('Customer name'),
+  claims: z.array(claimSchema).default([]),
+});
 
-  @ApiProperty({
-    example: 'John Doe',
-    description: 'Customer name',
-  })
-  @Expose()
-  name: string;
+export const customerResponseSchema = customerWithClaimsSchema.transform(
+  ({ id, email, name, claims }) => ({
+    id,
+    email,
+    name,
+    totalPoints: claims.reduce((sum, c) => sum + c.pointValue, 0),
+  }),
+);
 
-  @ApiProperty({
-    example: 150,
-    description: 'Total points from all claims',
-  })
-  @Expose()
-  @Transform(({ obj }) => {
-    return obj.claims.reduce(
-      (sum: number, claim: Claim) => sum + claim.pointValue,
-      0,
-    );
-  })
-  totalPoints: number;
+export class CustomerResponseDto extends createZodDto(customerResponseSchema) {}
 
-  constructor(partial: Partial<CustomerResponseDto>) {
-    Object.assign(this, partial);
-  }
-}
+export type CustomerResponse = z.infer<typeof customerResponseSchema>;

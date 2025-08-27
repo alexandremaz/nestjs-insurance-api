@@ -1,28 +1,23 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsString, IsNotEmpty } from 'class-validator';
+import { createZodDto } from 'nestjs-zod';
+import { z } from 'zod';
 
-// DTO to create a claim
-export class CreateClaimDto {
-  @ApiProperty({
-    example: 'Water Damage',
-    description: 'The title of the claim',
-  })
-  @IsString()
-  @IsNotEmpty()
-  title: string;
+export const createClaimSchema = z.object({
+  title: z
+    .string()
+    .trim()
+    .min(1)
+    .describe('The title of the claim'),
+  description: z
+    .string()
+    .trim()
+    .describe('Detailed description of the claim'),
+  pointValue: z
+    .number()
+    .int()
+    .nonnegative()
+    .describe('Point value of the claim'),
+});
 
-  @ApiProperty({
-    example: 'Water leak in the bathroom',
-    description: 'Detailed description of the claim',
-  })
-  @IsString()
-  description: string;
+export class CreateClaimDto extends createZodDto(createClaimSchema) {}
 
-  @ApiProperty({
-    example: 100,
-    description: 'Point value of the claim',
-    minimum: 0,
-  })
-  @IsNumber()
-  pointValue: number;
-}
+export type CreateClaim = z.infer<typeof createClaimSchema>;

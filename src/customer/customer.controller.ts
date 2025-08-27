@@ -5,14 +5,11 @@ import {
   Body,
   Param,
   NotFoundException,
-  UseInterceptors,
-  SerializeOptions,
   UseGuards,
   Patch,
   Delete,
   Request,
 } from '@nestjs/common';
-import { ClassSerializerInterceptor } from '@nestjs/common';
 import { CustomerService } from './customer.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { CustomerResponseDto } from './dto/get-customer.response.dto';
@@ -27,13 +24,12 @@ import {
 } from '@nestjs/swagger';
 import { CustomerPartnerPeriodService } from '../auth/customer-partner-period.service';
 import { CreateCustomerPartnerPeriodDto } from '../auth/dto/customer-partner-period.dto';
+import { ZodSerializerDto } from 'nestjs-zod';
 
 @ApiTags('Customers')
 @Controller('customers')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
-@UseInterceptors(ClassSerializerInterceptor)
-@SerializeOptions({ strategy: 'excludeAll' })
 // Controller to handle the customers
 export class CustomerController {
   constructor(
@@ -52,10 +48,11 @@ export class CustomerController {
     status: 400,
     description: 'Invalid data',
   })
+  @ZodSerializerDto(CreateCustomerResponseDto)
   async create(@Body() createCustomerDto: CreateCustomerDto) {
     const customer =
       await this.customerService.createCustomer(createCustomerDto);
-    return new CreateCustomerResponseDto(customer);
+    return customer;
   }
 
   @Get(':id')
@@ -69,12 +66,13 @@ export class CustomerController {
     status: 404,
     description: 'Customer not found',
   })
+  @ZodSerializerDto(CustomerResponseDto)
   async findOne(@Param('id') id: number) {
     const customer = await this.customerService.findOneWithClaims(id);
     if (!customer) {
       throw new NotFoundException(`Customer with ID ${id} not found`);
     }
-    return new CustomerResponseDto(customer);
+    return customer;
   }
 
   @Patch(':id')
