@@ -3,12 +3,19 @@ FROM node:22-alpine
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY package.json .
+COPY yarn.lock .
+COPY nest-cli.json .
+COPY tsconfig.build.json .
+COPY tsconfig.json .
 
-RUN npm install
+RUN corepack enable
 
-COPY . .
+RUN yarn install --immutable
 
-RUN npm run build
+COPY src .
+COPY test .
 
-CMD ["npm", "run", "start:dev"]
+RUN yarn build
+
+CMD ["yarn", "start:dev"]

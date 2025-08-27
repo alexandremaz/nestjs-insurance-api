@@ -67,7 +67,7 @@ $ yarn test:cov
 ## Create a partner (set x-admin-api-key in the header)
 
 ```bash
-$ curl -X POST http://localhost:3000/auth/create-partner -H "x-admin-api-key: my_admin_api_key" -H "Content-Type: application/json" -d '{"name": "A Partner"}'
+$ curl -X POST http://localhost:3000/auth/create-partner -H "x-admin-api-key: my_admin_api_key" -H "Content-Type: application/json" -d '{"partnerName": "A Partner"}'
 ```
 
 the response will contain the partner's API key which looks like `pk_<uuid>`
