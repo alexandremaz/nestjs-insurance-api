@@ -360,7 +360,6 @@ describe('Insurance API (E2E)', () => {
           endDate: new Date('2025-05-31'),
         });
 
-      console.log(response2.body);
       expect(response2.status).toBe(500);
     });
   });

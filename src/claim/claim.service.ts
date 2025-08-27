@@ -23,6 +23,11 @@ export class ClaimService {
     const customer = await this.customerRepository.findOne({
       where: { id: customerId },
     });
+
+    if (!customer) {
+      throw new NotFoundException('Customer not found');
+    }
+
     const claim = this.claimRepository.create({
       ...createClaimDto,
       customer,

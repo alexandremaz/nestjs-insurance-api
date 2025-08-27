@@ -1,8 +1,14 @@
 {
-  "editor.codeActionsOnSave": {
-    "source.fixAll": "explicit"
+  "typescript.tsdk": ".yarn/sdks/typescript/lib",
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "search.exclude": {
+    "**/.yarn": true,
+    "**/.pnp.*": true
   },
-  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
-  "typescript.tsdk": "node_modules/typescript/lib",
-  "typescript.preferences.importModuleSpecifier": "relative"
+  "eslint.nodePath": ".yarn/sdks",
+  "prettier.prettierPath": ".yarn/sdks/prettier/index.cjs",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "eslint.validate": [
+    "typescript",
+  ],
 }
