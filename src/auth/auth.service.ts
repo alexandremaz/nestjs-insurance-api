@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import type { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import type { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { Partner } from './entities/partner.entity';
 
@@ -44,8 +44,8 @@ export class AuthService {
     }
 
     const payload = {
-      sub: partner.id,
       name: partner.name,
+      sub: partner.id,
     };
     return {
       access_token: this.jwtService.sign(payload),

@@ -1,26 +1,27 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { CustomerModule } from './customer/customer.module';
-import { ClaimModule } from './claim/claim.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { AppService } from './app.service';
-import { AppController } from './app.controller';
-import { AuthModule } from './auth/auth.module';
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { ZodSerializerInterceptor, ZodValidationPipe } from 'nestjs-zod';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { AuthModule } from './auth/auth.module';
+import { ClaimModule } from './claim/claim.module';
+import { CustomerModule } from './customer/customer.module';
 import { HttpExceptionFilter } from './http-exception.filter';
 
 @Module({
+  controllers: [AppController],
   imports: [
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule.forRoot()],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
+        entities: [`${__dirname}/**/*.entity{.ts,.js}`],
+        migrations: [`${__dirname}/migrations/*{.ts,.js}`],
+        synchronize: true,
         type: 'postgres',
         url: configService.get<string>('DATABASE_URL'),
-        entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: true,
-        migrations: [__dirname + '/migrations/*{.ts,.js}'],
       }),
     }),
     CustomerModule,
@@ -42,6 +43,5 @@ import { HttpExceptionFilter } from './http-exception.filter';
       useClass: HttpExceptionFilter,
     },
   ],
-  controllers: [AppController],
 })
 export class AppModule {}

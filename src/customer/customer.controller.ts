@@ -1,30 +1,30 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Param,
-  NotFoundException,
-  UseGuards,
-  Patch,
+  Controller,
   Delete,
+  Get,
+  NotFoundException,
+  Param,
+  Patch,
+  Post,
   Request,
+  UseGuards,
 } from '@nestjs/common';
-import { CustomerService } from './customer.service';
-import { CreateCustomerDto } from './dto/create-customer.dto';
-import { CustomerResponseDto } from './dto/get-customer.response.dto';
-import { CreateCustomerResponseDto } from './dto/create-customer.response.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { UpdateCustomerDto } from './dto/update-customer.dto';
 import {
-  ApiTags,
+  ApiBearerAuth,
   ApiOperation,
   ApiResponse,
-  ApiBearerAuth,
+  ApiTags,
 } from '@nestjs/swagger';
-import { CustomerPartnerPeriodService } from '../auth/customer-partner-period.service';
-import { CreateCustomerPartnerPeriodDto } from '../auth/dto/customer-partner-period.dto';
 import { ZodSerializerDto } from 'nestjs-zod';
+import type { CustomerPartnerPeriodService } from '../auth/customer-partner-period.service';
+import type { CreateCustomerPartnerPeriodDto } from '../auth/dto/customer-partner-period.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import type { CustomerService } from './customer.service';
+import type { CreateCustomerDto } from './dto/create-customer.dto';
+import { CreateCustomerResponseDto } from './dto/create-customer.response.dto';
+import { CustomerResponseDto } from './dto/get-customer.response.dto';
+import type { UpdateCustomerDto } from './dto/update-customer.dto';
 
 @ApiTags('Customers')
 @Controller('customers')
@@ -40,13 +40,13 @@ export class CustomerController {
   @Post()
   @ApiOperation({ summary: 'Create a new customer' })
   @ApiResponse({
-    status: 201,
     description: 'Customer created successfully',
+    status: 201,
     type: CreateCustomerResponseDto,
   })
   @ApiResponse({
-    status: 400,
     description: 'Invalid data',
+    status: 400,
   })
   @ZodSerializerDto(CreateCustomerResponseDto)
   async create(@Body() createCustomerDto: CreateCustomerDto) {
@@ -58,13 +58,13 @@ export class CustomerController {
   @Get(':id')
   @ApiOperation({ summary: 'Get a customer by ID' })
   @ApiResponse({
-    status: 200,
     description: 'Customer found',
+    status: 200,
     type: CustomerResponseDto,
   })
   @ApiResponse({
-    status: 404,
     description: 'Customer not found',
+    status: 404,
   })
   @ZodSerializerDto(CustomerResponseDto)
   async findOne(@Param('id') id: number) {
@@ -78,13 +78,13 @@ export class CustomerController {
   @Patch(':id')
   @ApiOperation({ summary: 'Update a customer' })
   @ApiResponse({
-    status: 200,
     description: 'Customer updated successfully',
+    status: 200,
     type: CustomerResponseDto,
   })
   @ApiResponse({
-    status: 404,
     description: 'Customer not found',
+    status: 404,
   })
   async update(
     @Param('id') id: number,
@@ -96,8 +96,8 @@ export class CustomerController {
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a customer' })
   @ApiResponse({
-    status: 200,
     description: 'Customer deleted successfully',
+    status: 200,
   })
   async remove(@Param('id') id: number) {
     return await this.customerService.remove(id);
@@ -106,12 +106,12 @@ export class CustomerController {
   @Post(':id/contracts')
   @ApiOperation({ summary: 'Create a new contract for a customer' })
   @ApiResponse({
-    status: 201,
     description: 'Contract created successfully',
+    status: 201,
   })
   @ApiResponse({
-    status: 400,
     description: 'Invalid data or overlapping contract',
+    status: 400,
   })
   async createContract(
     @Param('id') customerId: number,

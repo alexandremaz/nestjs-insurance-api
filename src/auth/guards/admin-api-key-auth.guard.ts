@@ -1,6 +1,10 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { Request } from 'express';
+import {
+  type CanActivate,
+  type ExecutionContext,
+  Injectable,
+} from '@nestjs/common';
+import type { ConfigService } from '@nestjs/config';
+import type { Request } from 'express';
 // Guard to check if the request has the correct admin API key (env variable ADMIN_API_KEY)
 @Injectable()
 export class AdminApiKeyAuthGuard implements CanActivate {

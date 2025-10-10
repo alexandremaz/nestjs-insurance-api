@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { CustomerPartnerPeriod } from '../../customer/customer-partner-period.entity';
 
 // Entity to store the partner
@@ -13,6 +13,9 @@ export class Partner {
   @Column({ unique: true })
   apiKey: string;
 
-  @OneToMany(() => CustomerPartnerPeriod, (period) => period.partner)
+  @OneToMany(
+    () => CustomerPartnerPeriod,
+    (period) => period.partner,
+  )
   customerPeriods: CustomerPartnerPeriod[];
 }

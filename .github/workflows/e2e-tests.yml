@@ -17,30 +17,22 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version-file: '.nvmrc'
-
-    - name: Enable corepack
-      run: corepack enable
-
-    - name: Get yarn cache directory path
-      id: yarn-cache-dir-path
-      run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
-
-    - uses: actions/cache@v4
-      id: yarn-cache
-      with:
-        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-yarn-
+        cache: 'npm'
 
     - name: Install dependencies
-      run: yarn install --immutable
+      run: npm ci
+
+    - name: Check package.json sorting
+      run: npm run sort-package-json:check
+
+    - name: Run Biome checks
+      run: npm run biome:check
 
     - name: Start PostgreSQL database
       run: docker compose up -d db
 
     - name: Run E2E tests
-      run: yarn test:e2e
+      run: npm run test:e2e
 
     - name: Stop containers
       if: always()

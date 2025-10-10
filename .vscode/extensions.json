@@ -1,7 +1,3 @@
 {
-  "recommendations": [
-    "dbaeumer.vscode-eslint",
-    "arcanis.vscode-zipfs",
-    "esbenp.prettier-vscode"
-  ]
+  "recommendations": ["hashicorp.terraform", "biomejs.biome"]
 }

@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Claim } from '../claim/claim.entity';
 import { CustomerPartnerPeriod } from './customer-partner-period.entity';
 
@@ -14,9 +14,15 @@ export class Customer {
   @Column()
   name: string;
 
-  @OneToMany(() => Claim, (claim) => claim.customer)
+  @OneToMany(
+    () => Claim,
+    (claim) => claim.customer,
+  )
   claims: Claim[];
 
-  @OneToMany(() => CustomerPartnerPeriod, (period) => period.customer)
+  @OneToMany(
+    () => CustomerPartnerPeriod,
+    (period) => period.customer,
+  )
   partnerPeriods: CustomerPartnerPeriod[];
 }

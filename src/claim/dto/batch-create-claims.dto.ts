@@ -9,6 +9,8 @@ const batchCreateClaimsSchema = z.object({
     .describe('Array of claims to create'),
 });
 
-export class BatchCreateClaimDto extends createZodDto(batchCreateClaimsSchema) {}
+export class BatchCreateClaimDto extends createZodDto(
+  batchCreateClaimsSchema,
+) {}
 
 export type BatchCreateClaims = z.infer<typeof batchCreateClaimsSchema>;

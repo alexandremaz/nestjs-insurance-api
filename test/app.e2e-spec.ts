@@ -1,9 +1,9 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
-import request from 'supertest';
-import { AppModule } from '../src/app.module';
-import { DataSource } from 'typeorm';
+import type { INestApplication } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { Test, type TestingModule } from '@nestjs/testing';
+import request from 'supertest';
+import { DataSource } from 'typeorm';
+import { AppModule } from '../src/app.module';
 
 describe('Insurance API (E2E)', () => {
   let app: INestApplication;
@@ -29,8 +29,8 @@ describe('Insurance API (E2E)', () => {
     testPartnerName = 'Test Partner';
 
     validTokenForTests = jwtService.sign({
-      sub: 1,
       name: testPartnerName,
+      sub: 1,
     });
   });
 
@@ -98,7 +98,7 @@ describe('Insurance API (E2E)', () => {
         .get('/auth/login')
         .set('X-API-Key', validApiKey);
 
-      validToken = response.body['access_token'];
+      validToken = response.body.access_token;
     });
 
     it('should reject requests without token', () => {
@@ -161,8 +161,8 @@ describe('Insurance API (E2E)', () => {
         .expect(200);
 
       expect(response.body).toEqual({
-        id: body.id,
         email: 'noclaims@example.com',
+        id: body.id,
         name: 'No Claims User',
         totalPoints: 0,
       });
@@ -188,27 +188,27 @@ describe('Insurance API (E2E)', () => {
         .post(`/customers/${customer.id}/claims`)
         .set('Authorization', `Bearer ${validTokenForTests}`)
         .send({
-          title: 'Claim 1',
           description: 'Description of claim 1',
           pointValue: 100,
+          title: 'Claim 1',
         });
 
       await request(app.getHttpServer())
         .post(`/customers/${customer.id}/claims`)
         .set('Authorization', `Bearer ${validTokenForTests}`)
         .send({
-          title: 'Claim 2',
           description: 'Description of claim 2',
           pointValue: 58,
+          title: 'Claim 2',
         });
 
       await request(app.getHttpServer())
         .post(`/customers/${customer.id}/claims`)
         .set('Authorization', `Bearer ${validTokenForTests}`)
         .send({
-          title: 'Claim 3',
           description: 'Description of claim 2',
           pointValue: 19,
+          title: 'Claim 3',
         });
 
       await request(app.getHttpServer())
@@ -217,14 +217,14 @@ describe('Insurance API (E2E)', () => {
         .send({
           claims: [
             {
-              title: 'Batch Claim 1',
               description: 'Batch Description 1',
               pointValue: 50,
+              title: 'Batch Claim 1',
             },
             {
-              title: 'Batch Claim 2',
               description: 'Batch Description 2',
               pointValue: 30,
+              title: 'Batch Claim 2',
             },
           ],
         });
@@ -252,9 +252,9 @@ describe('Insurance API (E2E)', () => {
         .post(`/customers/${customer.id}/claims`)
         .set('Authorization', `Bearer ${validTokenForTests}`)
         .send({
-          title: 'Claim 1',
           description: 'Description of claim 1',
           pointValue: 100,
+          title: 'Claim 1',
         })
         .expect(201);
 
@@ -276,9 +276,9 @@ describe('Insurance API (E2E)', () => {
         .post(`/customers/${customer.id}/claims`)
         .set('Authorization', `Bearer ${validTokenForTests}`)
         .send({
-          title: '',
           description: 'Invalid description',
           pointValue: -10,
+          title: '',
         })
         .expect(400);
     });
@@ -300,14 +300,14 @@ describe('Insurance API (E2E)', () => {
         .send({
           claims: [
             {
-              title: 'Batch Claim 1',
               description: 'Batch Description 1',
               pointValue: 50,
+              title: 'Batch Claim 1',
             },
             {
-              title: 'Batch Claim 2',
               description: 'Batch Description 2',
               pointValue: 30,
+              title: 'Batch Claim 2',
             },
           ],
         });
@@ -335,8 +335,8 @@ describe('Insurance API (E2E)', () => {
         .post(`/customers/${customer.id}/contracts`)
         .set('Authorization', `Bearer ${validTokenForTests}`)
         .send({
-          startDate: new Date('2024-01-01'),
           endDate: new Date('2024-12-31'),
+          startDate: new Date('2024-01-01'),
         });
 
       expect(response.status).toBe(201);
@@ -346,8 +346,8 @@ describe('Insurance API (E2E)', () => {
         .post(`/customers/${customer.id}/contracts`)
         .set('Authorization', `Bearer ${validTokenForTests}`)
         .send({
-          startDate: new Date('2024-06-01'),
           endDate: new Date('2025-05-31'),
+          startDate: new Date('2024-06-01'),
         });
 
       expect(response2.status).toBe(500);

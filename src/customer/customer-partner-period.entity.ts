@@ -1,21 +1,27 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import { Customer } from './customer.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Partner } from '../auth/entities/partner.entity';
+import { Customer } from './customer.entity';
 
 @Entity()
 export class CustomerPartnerPeriod {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Customer, (customer) => customer.partnerPeriods)
+  @ManyToOne(
+    () => Customer,
+    (customer) => customer.partnerPeriods,
+  )
   customer: Customer;
 
-  @ManyToOne(() => Partner, (partner) => partner.customerPeriods)
+  @ManyToOne(
+    () => Partner,
+    (partner) => partner.customerPeriods,
+  )
   partner: Partner;
 
   @Column({ type: 'date' })
   startDate: Date;
 
-  @Column({ type: 'date', nullable: true })
+  @Column({ nullable: true, type: 'date' })
   endDate: Date;
 }

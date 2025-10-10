@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Customer } from '../customer/customer.entity';
 
 @Entity()
@@ -16,6 +16,9 @@ export class Claim {
   @Column()
   pointValue: number;
 
-  @ManyToOne(() => Customer, (customer) => customer.claims)
+  @ManyToOne(
+    () => Customer,
+    (customer) => customer.claims,
+  )
   customer: Customer;
 }

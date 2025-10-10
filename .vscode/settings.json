@@ -1,14 +1,11 @@
 {
-  "typescript.tsdk": ".yarn/sdks/typescript/lib",
-  "typescript.preferences.importModuleSpecifier": "relative",
-  "search.exclude": {
-    "**/.yarn": true,
-    "**/.pnp.*": true
+  "[json]": { "editor.defaultFormatter": "biomejs.biome" },
+  "[typescript]": { "editor.defaultFormatter": "biomejs.biome" },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.biome": "explicit"
   },
-  "eslint.nodePath": ".yarn/sdks",
-  "prettier.prettierPath": ".yarn/sdks/prettier/index.cjs",
-  "typescript.enablePromptUseWorkspaceTsdk": true,
-  "eslint.validate": [
-    "typescript",
-  ],
+  "editor.defaultFormatter": "biomejs.biome",
+  "editor.formatOnSave": true,
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

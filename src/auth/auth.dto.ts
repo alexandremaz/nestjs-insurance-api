@@ -13,9 +13,11 @@ const loginResponseSchema = z.object({
   access_token: z.string().describe('The JWT access token'),
 });
 
-export class CreatePartnerDto extends createZodDto(createPartnerSchema) {};
-export class CreatePartnerResponseDto extends createZodDto(createPartnerResponseSchema) {};
-export class LoginResponseDto extends createZodDto(loginResponseSchema) {};
+export class CreatePartnerDto extends createZodDto(createPartnerSchema) {}
+export class CreatePartnerResponseDto extends createZodDto(
+  createPartnerResponseSchema,
+) {}
+export class LoginResponseDto extends createZodDto(loginResponseSchema) {}
 
 export type CreatePartner = z.infer<typeof createPartnerSchema>;
 export type CreatePartnerResponse = z.infer<typeof createPartnerResponseSchema>;

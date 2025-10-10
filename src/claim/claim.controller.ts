@@ -1,16 +1,16 @@
-import { Controller, Post, Body, Param, UseGuards } from '@nestjs/common';
-import { ClaimService } from './claim.service';
-import { CreateClaimDto } from './dto/create-claim.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Body, Controller, Param, Post, UseGuards } from '@nestjs/common';
 import {
-  ApiTags,
+  ApiBearerAuth,
   ApiOperation,
   ApiResponse,
-  ApiBearerAuth,
+  ApiTags,
 } from '@nestjs/swagger';
-import { ClaimResponseDto } from './dto/claim.response.dto';
-import { BatchCreateClaimDto } from './dto/batch-create-claims.dto';
 import { ZodSerializerDto } from 'nestjs-zod';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import type { ClaimService } from './claim.service';
+import { BatchCreateClaimDto } from './dto/batch-create-claims.dto';
+import { ClaimResponseDto } from './dto/claim.response.dto';
+import type { CreateClaimDto } from './dto/create-claim.dto';
 
 @ApiTags('Claims')
 @Controller('customers/:customerId/claims')
@@ -23,13 +23,13 @@ export class ClaimController {
   @Post()
   @ApiOperation({ summary: 'Create a new claim for a customer' })
   @ApiResponse({
-    status: 201,
     description: 'Claim created successfully',
+    status: 201,
     type: ClaimResponseDto,
   })
   @ApiResponse({
-    status: 400,
     description: 'Invalid data',
+    status: 400,
   })
   @ZodSerializerDto(ClaimResponseDto)
   async create(
@@ -42,13 +42,13 @@ export class ClaimController {
   @Post('batch')
   @ApiOperation({ summary: 'Batch create claims for a customer' })
   @ApiResponse({
-    status: 201,
     description: 'Claims created successfully',
+    status: 201,
     type: BatchCreateClaimDto,
   })
   @ApiResponse({
-    status: 400,
     description: 'Invalid data',
+    status: 400,
   })
   async batchCreate(
     @Param('customerId') customerId: number,

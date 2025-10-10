@@ -1,18 +1,18 @@
-import { Controller, Post, Body, Get, UseGuards } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { AdminApiKeyAuthGuard } from './guards/admin-api-key-auth.guard';
-import { PartnerApiKeyAuthGuard } from './guards/partner-api-key-auth.guard';
-import { GetPartner } from './decorators/get-partner.decorator';
-import { Partner } from './entities/partner.entity';
-import { ApiTags, ApiOperation, ApiResponse, ApiHeader } from '@nestjs/swagger';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ZodSerializerDto } from 'nestjs-zod';
 import {
-  CreatePartnerDto,
-  CreatePartnerResponse,
+  type CreatePartnerDto,
+  type CreatePartnerResponse,
   CreatePartnerResponseDto,
-  LoginResponse,
+  type LoginResponse,
   LoginResponseDto,
 } from './auth.dto';
-import { ZodSerializerDto } from 'nestjs-zod';
+import type { AuthService } from './auth.service';
+import { GetPartner } from './decorators/get-partner.decorator';
+import type { Partner } from './entities/partner.entity';
+import { AdminApiKeyAuthGuard } from './guards/admin-api-key-auth.guard';
+import { PartnerApiKeyAuthGuard } from './guards/partner-api-key-auth.guard';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -24,17 +24,17 @@ export class AuthController {
   @Post('create-partner')
   @ApiOperation({ summary: 'Create a new partner' })
   @ApiHeader({
-    name: 'x-admin-api-key',
     description: 'Admin API key',
+    name: 'x-admin-api-key',
   })
   @ApiResponse({
-    status: 201,
     description: 'Partner created successfully',
+    status: 201,
     type: CreatePartnerResponseDto,
   })
   @ApiResponse({
-    status: 403,
     description: 'Access denied',
+    status: 403,
   })
   @ZodSerializerDto(CreatePartnerResponseDto)
   async createPartner(
@@ -50,17 +50,17 @@ export class AuthController {
   @Get('login')
   @ApiOperation({ summary: 'Partner login' })
   @ApiHeader({
-    name: 'x-api-key',
     description: 'Partner API key',
+    name: 'x-api-key',
   })
   @ApiResponse({
-    status: 200,
     description: 'Login successful',
+    status: 200,
     type: LoginResponseDto,
   })
   @ApiResponse({
-    status: 403,
     description: 'Access denied',
+    status: 403,
   })
   @ZodSerializerDto(LoginResponseDto)
   async login(@GetPartner() partner: Partner): Promise<LoginResponse> {

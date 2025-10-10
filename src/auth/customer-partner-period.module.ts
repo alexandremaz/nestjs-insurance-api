@@ -4,9 +4,9 @@ import { CustomerPartnerPeriod } from '../customer/customer-partner-period.entit
 import { CustomerPartnerPeriodService } from './customer-partner-period.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([CustomerPartnerPeriod])],
-  providers: [CustomerPartnerPeriodService],
   controllers: [],
   exports: [CustomerPartnerPeriodService],
+  imports: [TypeOrmModule.forFeature([CustomerPartnerPeriod])],
+  providers: [CustomerPartnerPeriodService],
 })
 export class CustomerPartnerPeriodModule {}
