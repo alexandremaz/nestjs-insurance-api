@@ -1,14 +1,16 @@
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ZodSerializerDto } from 'nestjs-zod';
+// biome-ignore lint/style/useImportType: NestJS constructor injection
 import {
-  type CreatePartnerDto,
+  CreatePartnerDto,
   type CreatePartnerResponse,
   CreatePartnerResponseDto,
   type LoginResponse,
   LoginResponseDto,
 } from './auth.dto';
-import type { AuthService } from './auth.service';
+// biome-ignore lint/style/useImportType: NestJS constructor injection
+import { AuthService } from './auth.service';
 import { GetPartner } from './decorators/get-partner.decorator';
 import type { Partner } from './entities/partner.entity';
 import { AdminApiKeyAuthGuard } from './guards/admin-api-key-auth.guard';

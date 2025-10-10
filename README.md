@@ -7,13 +7,8 @@ $ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bas
 # install node
 $ nvm install
 
-# install yarn
-$ corepack enable
-$ yarn set version stable
-$ yarn install
-
 # install dependencies
-$ yarn
+$ npm i
 ```
 
 ## Environment Variables Required (in .env file)
@@ -31,7 +26,7 @@ This is an insurance API built with NestJS that allows partners to manage custom
 
 # API Documentation
 
-The full API documentation is available via Swagger UI at `/api` when the application is running (localhost:3000/api) : `yarn start:dev`
+The full API documentation is available via Swagger UI at `/api` when the application is running (localhost:3000/api) : `npm run start:dev`
 don't forget to set the correct environment variables in the .env file
 and don't forget to run the docker compose file to have a database available : `docker compose up -d db`
 
@@ -39,27 +34,27 @@ and don't forget to run the docker compose file to have a database available : `
 
 ```bash
 # development
-$ yarn start
+$ npm run start
 
 # watch mode
-$ yarn start:dev
+$ npm run start:dev
 
 # production mode
-$ yarn start:prod
+$ npm run start:prod
 ```
 
 ## Run tests
 
 ```bash
 # unit tests : a bit useless for now, but useful for future development (I didn't have time to implement them)
-$ yarn test
+$ npm run test
 
 # e2e tests : useful to test the API, just up the db container before running the tests with docker compose up -d db
 $ docker compose up -d db
-$ yarn test:e2e
+$ npm run test:e2e
 
 # test coverage : useful to see the code coverage of the tests, but not very useful for now (I didn't have time to implement enough unit tests)
-$ yarn test:cov
+$ npm run test:cov
 ```
 
 # How to use the API

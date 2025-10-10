@@ -5,7 +5,8 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import type { Request } from 'express';
-import type { AuthService } from '../auth.service';
+// biome-ignore lint/style/useImportType: NestJS constructor injection
+import { AuthService } from '../auth.service';
 import type { Partner } from '../entities/partner.entity';
 // Guard to check if the request has a valid partner API key, and if it's valid, it stores the partner in the request
 @Injectable()

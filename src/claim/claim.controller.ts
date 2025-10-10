@@ -7,10 +7,12 @@ import {
 } from '@nestjs/swagger';
 import { ZodSerializerDto } from 'nestjs-zod';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import type { ClaimService } from './claim.service';
+// biome-ignore lint/style/useImportType: NestJS constructor injection
+import { ClaimService } from './claim.service';
 import { BatchCreateClaimDto } from './dto/batch-create-claims.dto';
 import { ClaimResponseDto } from './dto/claim.response.dto';
-import type { CreateClaimDto } from './dto/create-claim.dto';
+// biome-ignore lint/style/useImportType: NestJS constructor injection
+import { CreateClaimDto } from './dto/create-claim.dto';
 
 @ApiTags('Claims')
 @Controller('customers/:customerId/claims')

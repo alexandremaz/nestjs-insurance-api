@@ -1,6 +1,7 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import type { AppService } from './app.service';
+// biome-ignore lint/style/useImportType: NestJS constructor injection
+import { AppService } from './app.service';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 
 @Controller()

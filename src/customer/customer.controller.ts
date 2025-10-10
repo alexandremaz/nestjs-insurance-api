@@ -17,14 +17,19 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { ZodSerializerDto } from 'nestjs-zod';
-import type { CustomerPartnerPeriodService } from '../auth/customer-partner-period.service';
-import type { CreateCustomerPartnerPeriodDto } from '../auth/dto/customer-partner-period.dto';
+// biome-ignore lint/style/useImportType: NestJS constructor injection
+import { CustomerPartnerPeriodService } from '../auth/customer-partner-period.service';
+// biome-ignore lint/style/useImportType: NestJS constructor injection
+import { CreateCustomerPartnerPeriodDto } from '../auth/dto/customer-partner-period.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import type { CustomerService } from './customer.service';
-import type { CreateCustomerDto } from './dto/create-customer.dto';
+// biome-ignore lint/style/useImportType: NestJS constructor injection
+import { CustomerService } from './customer.service';
+// biome-ignore lint/style/useImportType: NestJS constructor injection
+import { CreateCustomerDto } from './dto/create-customer.dto';
 import { CreateCustomerResponseDto } from './dto/create-customer.response.dto';
 import { CustomerResponseDto } from './dto/get-customer.response.dto';
-import type { UpdateCustomerDto } from './dto/update-customer.dto';
+// biome-ignore lint/style/useImportType: NestJS constructor injection
+import { UpdateCustomerDto } from './dto/update-customer.dto';
 
 @ApiTags('Customers')
 @Controller('customers')

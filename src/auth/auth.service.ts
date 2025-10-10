@@ -1,7 +1,9 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import type { JwtService } from '@nestjs/jwt';
+// biome-ignore lint/style/useImportType: NestJS constructor injection
+import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import type { Repository } from 'typeorm';
+// biome-ignore lint/style/useImportType: NestJS constructor injection
+import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { Partner } from './entities/partner.entity';
 

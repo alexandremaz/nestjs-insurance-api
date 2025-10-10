@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import type { Repository } from 'typeorm';
+// biome-ignore lint/style/useImportType: NestJS constructor injection
+import { Repository } from 'typeorm';
 import { Customer } from './customer.entity';
 import type { CreateCustomer } from './dto/create-customer.dto';
 import type { UpdateCustomerDto } from './dto/update-customer.dto';

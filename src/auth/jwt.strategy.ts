@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import type { ConfigService } from '@nestjs/config';
+// biome-ignore lint/style/useImportType: NestJS constructor injection
+import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 @Injectable()
 // Strategy to validate the JWT token of a partner
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(configService: ConfigService) {
+  // biome-ignore lint/correctness/noUnusedPrivateClassMembers: NestJS constructor injection
+  constructor(private configService: ConfigService) {
     super({
       ignoreExpiration: false,
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),

@@ -3,7 +3,8 @@ import {
   type ExecutionContext,
   Injectable,
 } from '@nestjs/common';
-import type { ConfigService } from '@nestjs/config';
+// biome-ignore lint/style/useImportType: NestJS constructor injection
+import { ConfigService } from '@nestjs/config';
 import type { Request } from 'express';
 // Guard to check if the request has the correct admin API key (env variable ADMIN_API_KEY)
 @Injectable()
