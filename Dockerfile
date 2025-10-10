@@ -1,21 +1,15 @@
 # Dockerfile
-FROM node:22-alpine
+FROM node:22.20.0-alpine3.22
 
 WORKDIR /app
 
-COPY package.json .
-COPY yarn.lock .
-COPY nest-cli.json .
-COPY tsconfig.build.json .
-COPY tsconfig.json .
+COPY package.json package-lock.json nest-cli.json tsconfig.build.json tsconfig.json ./
 
-RUN corepack enable
-
-RUN yarn install --immutable
+RUN npm ci
 
 COPY src .
 COPY test .
 
-RUN yarn build
+RUN npm run build
 
-CMD ["yarn", "start:dev"]
+CMD ["npm", "run", "start:dev"]
