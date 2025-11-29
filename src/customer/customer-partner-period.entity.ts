@@ -7,16 +7,10 @@ export class CustomerPartnerPeriod {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(
-    () => Customer,
-    (customer) => customer.partnerPeriods,
-  )
+  @ManyToOne(() => Customer, (customer) => customer.partnerPeriods)
   customer: Customer;
 
-  @ManyToOne(
-    () => Partner,
-    (partner) => partner.customerPeriods,
-  )
+  @ManyToOne(() => Partner, (partner) => partner.customerPeriods)
   partner: Partner;
 
   @Column({ type: 'date' })

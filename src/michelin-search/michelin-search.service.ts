@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-// biome-ignore lint/style/useImportType: NestJS constructor injection
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 
 @Injectable()

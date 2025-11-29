@@ -22,7 +22,7 @@ async function main() {
   for await (const line of rl) {
     if (!line.trim()) continue;
 
-    const lineParsed = JSON.parse(line);
+    const lineParsed: unknown = JSON.parse(line);
 
     batch.push(lineParsed);
   }

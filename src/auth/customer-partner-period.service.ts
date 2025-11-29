@@ -1,11 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-// biome-ignore lint/style/useImportType: NestJS constructor injection
 import { Repository } from 'typeorm';
 import { Customer } from '../customer/customer.entity';
 import { CustomerPartnerPeriod } from '../customer/customer-partner-period.entity';
-import type { CreateCustomerPartnerPeriodDto } from './dto/customer-partner-period.dto';
 import { Partner } from './entities/partner.entity';
+import { CreateCustomerPartnerPeriodDto } from './dto/customer-partner-period.dto';
 
 @Injectable()
 export class CustomerPartnerPeriodService {

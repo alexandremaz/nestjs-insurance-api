@@ -13,9 +13,6 @@ export class Partner {
   @Column({ unique: true })
   apiKey: string;
 
-  @OneToMany(
-    () => CustomerPartnerPeriod,
-    (period) => period.partner,
-  )
+  @OneToMany(() => CustomerPartnerPeriod, (period) => period.partner)
   customerPeriods: CustomerPartnerPeriod[];
 }

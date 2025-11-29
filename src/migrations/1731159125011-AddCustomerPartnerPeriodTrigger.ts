@@ -1,8 +1,6 @@
 import type { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class AddCustomerPartnerPeriodTrigger1731159125011
-  implements MigrationInterface
-{
+export class AddCustomerPartnerPeriodTrigger1731159125011 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     console.info('Adding customer partner period trigger');
 

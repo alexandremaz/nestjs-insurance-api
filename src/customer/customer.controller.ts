@@ -17,18 +17,13 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { ZodSerializerDto } from 'nestjs-zod';
-// biome-ignore lint/style/useImportType: NestJS constructor injection
 import { CustomerPartnerPeriodService } from '../auth/customer-partner-period.service';
-// biome-ignore lint/style/useImportType: NestJS constructor injection
 import { CreateCustomerPartnerPeriodDto } from '../auth/dto/customer-partner-period.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-// biome-ignore lint/style/useImportType: NestJS constructor injection
 import { CustomerService } from './customer.service';
-// biome-ignore lint/style/useImportType: NestJS constructor injection
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { CreateCustomerResponseDto } from './dto/create-customer.response.dto';
 import { CustomerResponseDto } from './dto/get-customer.response.dto';
-// biome-ignore lint/style/useImportType: NestJS constructor injection
 import { UpdateCustomerDto } from './dto/update-customer.dto';
 
 @ApiTags('Customers')
@@ -121,7 +116,7 @@ export class CustomerController {
   async createContract(
     @Param('id') customerId: number,
     @Body() createContractDto: CreateCustomerPartnerPeriodDto,
-    @Request() req,
+    @Request() req: { user: { id: number } },
   ) {
     return await this.periodService.create(
       createContractDto,

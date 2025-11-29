@@ -14,15 +14,9 @@ export class Customer {
   @Column()
   name: string;
 
-  @OneToMany(
-    () => Claim,
-    (claim) => claim.customer,
-  )
+  @OneToMany(() => Claim, (claim) => claim.customer)
   claims: Claim[];
 
-  @OneToMany(
-    () => CustomerPartnerPeriod,
-    (period) => period.customer,
-  )
+  @OneToMany(() => CustomerPartnerPeriod, (period) => period.customer)
   partnerPeriods: CustomerPartnerPeriod[];
 }

@@ -16,9 +16,6 @@ export class Claim {
   @Column()
   pointValue: number;
 
-  @ManyToOne(
-    () => Customer,
-    (customer) => customer.claims,
-  )
+  @ManyToOne(() => Customer, (customer) => customer.claims)
   customer: Customer;
 }
