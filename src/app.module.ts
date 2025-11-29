@@ -10,6 +10,7 @@ import { ClaimModule } from './claim/claim.module';
 import { CustomerModule } from './customer/customer.module';
 import { HttpExceptionFilter } from './http-exception.filter';
 import { MichelinSearchModule } from './michelin-search/michelin-search.module';
+import { HealthModule } from './health/health.module';
 
 @Module({
   controllers: [AppController],
@@ -29,6 +30,7 @@ import { MichelinSearchModule } from './michelin-search/michelin-search.module';
     ClaimModule,
     AuthModule,
     MichelinSearchModule,
+    HealthModule,
   ],
   providers: [
     AppService,
