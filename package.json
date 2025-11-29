@@ -9,6 +9,7 @@
     "biome:check": "biome ci",
     "biome:fix": "biome check --write",
     "build": "nest build",
+    "michelin": "node --experimental-strip-types michelin.ts",
     "sort-package-json:check": "sort-package-json --check",
     "sort-package-json:fix": "sort-package-json",
     "start": "nest start",
@@ -39,9 +40,11 @@
     }
   },
   "dependencies": {
+    "@elastic/elasticsearch": "^9.2.0",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.1",
+    "@nestjs/elasticsearch": "^11.1.0",
     "@nestjs/jwt": "^11.0.0",
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.0.1",
