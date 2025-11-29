@@ -50,7 +50,7 @@ export const searchResponse = z
               .describe('Longitude of the restaurants we are looking for'),
           }),
         }),
-        url: z.url(),
+        url: z.url().describe('URL of the restaurants we are looking for'),
         star: z
           .string()
           .trim()
