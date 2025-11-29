@@ -1,5 +1,5 @@
-Source : this entire files comes from WEBINAR https://www.elastic.co/virtual-events/getting-started-elasticsearch
-it is a publicly available file at https://info.elastic.co/rs/813-MAM-392/images/Demo_Script.txt
+Source : this file 'elastic-getting-started-script.txt' comes from WEBINAR https://www.elastic.co/virtual-events/getting-started-elasticsearch
+and the original could be found at https://info.elastic.co/rs/813-MAM-392/images/Demo_Script.txt
 
 # Getting Started with Elasticsearch Demo
 #
