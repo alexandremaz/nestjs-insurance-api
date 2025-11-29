@@ -37,3 +37,8 @@ services:
       - "xpack.security.enabled=false"
     ports:
       - "9200:9200"
+    healthcheck:
+      test: "curl -X GET http://localhost:9200/_cluster/health || exit 1"
+      interval: 5s
+      timeout: 2s
+      retries: 20

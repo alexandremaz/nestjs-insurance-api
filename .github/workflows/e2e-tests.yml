@@ -34,6 +34,9 @@ jobs:
       - name: Start Elasticsearch server
         run: docker compose up --wait -d elastic
 
+      - name: Populate Elasticsearch with michelin sample dataset
+        run: npm run michelin
+
       - name: Run E2E tests
         run: npm run test:e2e
 
