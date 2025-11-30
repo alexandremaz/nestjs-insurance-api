@@ -1,13 +1,23 @@
 import { createReadStream } from 'node:fs';
 import { createInterface } from 'node:readline';
 import { Client } from '@elastic/elasticsearch';
+import * as z from 'zod';
+import { validateEnvWithZod } from './src/config/config-injection.ts';
 
 const index = 'michelin';
 const NDJSON_FILE = `./${index}.ndjson`;
 
 async function main() {
+  const { ELASTIC_HOST: host, ELASTIC_PORT: port } = validateEnvWithZod({
+    schema: z.object({
+      ELASTIC_HOST: z.string().nonempty('ELASTIC_URI is required'),
+      ELASTIC_PORT: z.coerce.number().int().min(1).max(65535).default(9200),
+    }),
+    value: process.env,
+  });
+
   const client = new Client({
-    node: 'http://localhost:9200',
+    node: `http://${host}:${port}`,
   });
 
   const batch: unknown[] = [];

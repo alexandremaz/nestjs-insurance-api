@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule, ConfigType } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -9,6 +9,7 @@ import { Partner } from './entities/partner.entity';
 import { AdminApiKeyAuthGuard } from './guards/admin-api-key-auth.guard';
 import { PartnerApiKeyAuthGuard } from './guards/partner-api-key-auth.guard';
 import { JwtStrategy } from './jwt.strategy';
+import configInjection from '../config/config-injection';
 
 // Module to handle the authentication of the partners and the admin
 @Module({
@@ -19,9 +20,9 @@ import { JwtStrategy } from './jwt.strategy';
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        secret: config.get<string>('JWT_SECRET'),
+      inject: [configInjection.KEY],
+      useFactory: (config: ConfigType<typeof configInjection>) => ({
+        secret: config.JWT_SECRET,
         signOptions: { expiresIn: '1h' },
       }),
     }),

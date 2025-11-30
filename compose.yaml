@@ -6,7 +6,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - DATABASE_URL=postgresql://user:password@db:5432/insurance
+      - DATABASE_URL=postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}
       - JWT_SECRET=${JWT_SECRET}
       - ADMIN_API_KEY=${ADMIN_API_KEY}
     depends_on:
@@ -19,13 +19,14 @@ services:
   db:
     image: postgres
     environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=insurance
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=${DATABASE_NAME}
+      - PGPORT=${DATABASE_PORT}
     ports:
-      - "127.0.0.1:5432:5432"
+      - "127.0.0.1:$DATABASE_PORT:$DATABASE_PORT"
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U user -d insurance" ]
+      test: [ "CMD-SHELL", "pg_isready -U user -d $DATABASE_NAME" ]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -38,9 +39,9 @@ services:
       - "xpack.security.enabled=false"
       - "transport.host=127.0.0.1"
     ports:
-      - "127.0.0.1:9200:9200"
+      - "127.0.0.1:$ELASTIC_PORT:$ELASTIC_PORT"
     healthcheck:
-      test: "curl -X GET http://localhost:9200/_cluster/health || exit 1"
+      test: "curl -X GET http://localhost:$ELASTIC_PORT/_cluster/health || exit 1"
       interval: 5s
       timeout: 2s
       retries: 20

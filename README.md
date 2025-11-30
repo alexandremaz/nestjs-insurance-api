@@ -28,7 +28,9 @@ This is an insurance API built with NestJS that allows partners to manage custom
 
 The full API documentation is available via Swagger UI at `/api` when the application is running (localhost:3000/api) : `npm run start:dev`
 don't forget to set the correct environment variables in the .env file
-and don't forget to run the docker compose file to have a database available : `docker compose up -d elastic db`
+and don't forget to :
+- run the docker compose file to have a database available : `docker compose up -d elastic db`
+- populate elastic server : `npm run michelin`
 
 ## Compile and run the project
 
@@ -49,9 +51,8 @@ $ npm run start:prod
 # unit tests : a bit useless for now, but useful for future development (I didn't have time to implement them)
 $ npm run test
 
-# e2e tests : useful to test the API, just up the db and elastic containers before running the tests 
-$ docker compose up -d db elastic
-$ npm run test:e2e
+# e2e tests :
+$ docker compose up --wait -d elastic db && npm run michelin && npm run test:e2e
 
 # test coverage : useful to see the code coverage of the tests, but not very useful for now (I didn't have time to implement enough unit tests)
 $ npm run test:cov

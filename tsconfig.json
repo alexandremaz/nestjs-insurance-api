@@ -16,6 +16,7 @@
     "outDir": "./dist",
     "removeComments": true,
     "resolvePackageJsonExports": true,
+    "rewriteRelativeImportExtensions": true,
     "skipLibCheck": true,
     "sourceMap": true,
     "strictBindCallApply": false,
