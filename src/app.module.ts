@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -11,6 +11,9 @@ import { CustomerModule } from './customer/customer.module';
 import { HttpExceptionFilter } from './http-exception.filter';
 import { MichelinSearchModule } from './michelin-search/michelin-search.module';
 import { HealthModule } from './health/health.module';
+import { HealthIndicatorService } from '@nestjs/terminus';
+import { ElasticSearchHealthIndicator } from './elastic-search.health-indicator';
+import { HttpService } from '@nestjs/axios';
 
 @Module({
   controllers: [AppController],
@@ -30,7 +33,24 @@ import { HealthModule } from './health/health.module';
     ClaimModule,
     AuthModule,
     MichelinSearchModule,
-    HealthModule,
+    HealthModule.registerAsync({
+      inject: [HealthIndicatorService, HttpService, Logger],
+      useFactory(
+        healthIndicatorService: HealthIndicatorService,
+        httpService: HttpService,
+        logger: Logger,
+      ) {
+        return {
+          healthIndicators: [
+            new ElasticSearchHealthIndicator(
+              healthIndicatorService,
+              httpService,
+              logger,
+            ),
+          ],
+        };
+      },
+    }),
   ],
   providers: [
     AppService,

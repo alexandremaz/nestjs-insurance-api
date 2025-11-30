@@ -49,7 +49,7 @@ $ npm run start:prod
 # unit tests : a bit useless for now, but useful for future development (I didn't have time to implement them)
 $ npm run test
 
-# e2e tests : useful to test the API, just up the db and elastic containers before running the tests with docker compose up -d db
+# e2e tests : useful to test the API, just up the db and elastic containers before running the tests 
 $ docker compose up -d db elastic
 $ npm run test:e2e
 

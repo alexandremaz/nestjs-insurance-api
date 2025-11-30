@@ -4,15 +4,15 @@ import { HttpService } from '@nestjs/axios';
 import { isAxiosError } from 'axios';
 
 @Injectable()
-export class ElasticHealthIndicator {
+export class ElasticSearchHealthIndicator {
   constructor(
     private readonly healthIndicatorService: HealthIndicatorService,
     private readonly httpService: HttpService,
     private readonly logger: Logger,
   ) {}
 
-  async isHealthy(key: string) {
-    const indicator = this.healthIndicatorService.check(key);
+  async isHealthy() {
+    const indicator = this.healthIndicatorService.check('elastic-search');
     try {
       const {
         status,

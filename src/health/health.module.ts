@@ -1,8 +1,8 @@
 import { Logger, Module } from '@nestjs/common';
 import { TerminusModule } from '@nestjs/terminus';
 import { HealthController } from './health.controller';
-import { ElasticHealthIndicator } from '../elastic-health-indicator/elastic-health-indicator';
 import { HttpModule } from '@nestjs/axios';
+import { ConfigurableModuleClass } from './health.module-definition';
 
 @Module({
   imports: [
@@ -12,6 +12,6 @@ import { HttpModule } from '@nestjs/axios';
     HttpModule,
   ],
   controllers: [HealthController],
-  providers: [ElasticHealthIndicator, Logger],
+  providers: [Logger],
 })
-export class HealthModule {}
+export class HealthModule extends ConfigurableModuleClass {}
