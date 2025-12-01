@@ -1,5 +1,5 @@
 import { Logger, Module } from '@nestjs/common';
-import { ConfigModule, ConfigType } from '@nestjs/config';
+import { ConfigModule, ConfigType, ConditionalModule } from '@nestjs/config';
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ZodSerializerInterceptor, ZodValidationPipe } from 'nestjs-zod';
@@ -15,6 +15,7 @@ import { HealthIndicatorService } from '@nestjs/terminus';
 import { ElasticSearchHealthIndicator } from './elastic-search.health-indicator';
 import { HttpService } from '@nestjs/axios';
 import configInjection from './config/config-injection';
+import assert from 'node:assert';
 
 @Module({
   controllers: [AppController],
@@ -23,30 +24,40 @@ import configInjection from './config/config-injection';
       isGlobal: true,
       load: [configInjection],
     }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule.forRoot()],
-      inject: [configInjection.KEY],
-      useFactory: ({
-        database: {
-          DATABASE_HOST: host,
-          DATABASE_NAME: name,
-          DATABASE_PORT: port,
-          DATABASE_PASSWORD: password,
-          DATABASE_TYPE: type,
-          DATABASE_USER: user,
+    ConditionalModule.registerWhen(
+      TypeOrmModule.forRootAsync({
+        inject: [configInjection.KEY],
+        useFactory: (config: ConfigType<typeof configInjection>) => {
+          assert(config.IS_MODULE_TYPEORM_ENABLED);
+          const {
+            DATABASE_HOST: host,
+            DATABASE_NAME: name,
+            DATABASE_PASSWORD: password,
+            DATABASE_USER: user,
+            DATABASE_PORT: port,
+            DATABASE_TYPE: type,
+          } = config;
+          return {
+            entities: [`${__dirname}/**/*.entity{.ts,.js}`],
+            migrations: [`${__dirname}/migrations/*{.ts,.js}`],
+            synchronize: true,
+            type,
+            url: `postgresql://${user}:${password}@${host}:${port}/${name}`,
+          };
         },
-      }: ConfigType<typeof configInjection>) => ({
-        entities: [`${__dirname}/**/*.entity{.ts,.js}`],
-        migrations: [`${__dirname}/migrations/*{.ts,.js}`],
-        synchronize: true,
-        type,
-        url: `postgresql://${user}:${password}@${host}:${port}/${name}`,
       }),
-    }),
-    CustomerModule,
-    ClaimModule,
-    AuthModule,
-    MichelinSearchModule,
+      'IS_MODULE_TYPEORM_ENABLED',
+    ),
+    ConditionalModule.registerWhen(
+      CustomerModule,
+      'IS_MODULE_CUSTOMER_ENABLED',
+    ),
+    ConditionalModule.registerWhen(ClaimModule, 'IS_MODULE_CLAIM_ENABLED'),
+    ConditionalModule.registerWhen(AuthModule, 'IS_MODULE_AUTH_ENABLED'),
+    ConditionalModule.registerWhen(
+      MichelinSearchModule,
+      'IS_MODULE_MICHELIN_ENABLED',
+    ),
     HealthModule.registerAsync({
       inject: [
         HealthIndicatorService,
@@ -62,12 +73,16 @@ import configInjection from './config/config-injection';
       ) {
         return {
           healthIndicators: [
-            new ElasticSearchHealthIndicator(
-              healthIndicatorService,
-              httpService,
-              logger,
-              config,
-            ),
+            ...(config.IS_MODULE_ELASTIC_ENABLED
+              ? [
+                  new ElasticSearchHealthIndicator(
+                    healthIndicatorService,
+                    httpService,
+                    logger,
+                    config,
+                  ),
+                ]
+              : []),
           ],
         };
       },

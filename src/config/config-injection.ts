@@ -31,46 +31,49 @@ export function validateEnvWithZod<T>({
 
 export default registerAs('config', () =>
   validateEnvWithZod({
-    schema: z
-      .object({
-        DATABASE_USER: z.string().nonempty('DATABASE_USER is required'),
-        DATABASE_PASSWORD: z.string().nonempty('DATABASE_PASSWORD is required'),
-        DATABASE_NAME: z.string().nonempty('DATABASE_NAME is required'),
-        DATABASE_HOST: z.string().nonempty('DATABASE_HOST is required'),
-        DATABASE_PORT: z.coerce.number().int().min(1).max(65535).default(5432),
-        DATABASE_TYPE: z.literal('postgres'),
-        JWT_SECRET: z.string().nonempty('JWT_SECRET is required'),
-        ADMIN_API_KEY: z.string().nonempty('ADMIN_API_KEY is required'),
-        ELASTIC_HOST: z.string().nonempty('ELASTIC_URI is required'),
-        ELASTIC_PORT: z.coerce.number().int().min(1).max(65535).default(9200),
-      })
-      .transform(
-        ({
-          DATABASE_HOST,
-          DATABASE_NAME,
-          DATABASE_PASSWORD,
-          DATABASE_PORT,
-          DATABASE_TYPE,
-          DATABASE_USER,
-          ELASTIC_HOST,
-          ELASTIC_PORT,
-          ...rest
-        }) => ({
-          database: {
-            DATABASE_HOST,
-            DATABASE_NAME,
-            DATABASE_PASSWORD,
-            DATABASE_PORT,
-            DATABASE_TYPE,
-            DATABASE_USER,
-          },
-          elastic: {
-            ELASTIC_HOST,
-            ELASTIC_PORT,
-          },
-          ...rest,
+    schema: z.intersection(
+      z.union([
+        z.object({
+          IS_MODULE_TYPEORM_ENABLED: z.coerce.boolean().pipe(z.literal(false)),
+          IS_MODULE_AUTH_ENABLED: z.coerce.boolean().pipe(z.literal(false)),
+          IS_MODULE_CUSTOMER_ENABLED: z.coerce.boolean().pipe(z.literal(false)),
+          IS_MODULE_CLAIM_ENABLED: z.coerce.boolean().pipe(z.literal(false)),
         }),
-      ),
+        z.object({
+          IS_MODULE_TYPEORM_ENABLED: z.coerce.boolean().pipe(z.literal(true)),
+          DATABASE_USER: z.string().nonempty('DATABASE_USER is required'),
+          DATABASE_PASSWORD: z
+            .string()
+            .nonempty('DATABASE_PASSWORD is required'),
+          DATABASE_NAME: z.string().nonempty('DATABASE_NAME is required'),
+          DATABASE_HOST: z.string().nonempty('DATABASE_HOST is required'),
+          DATABASE_PORT: z.coerce
+            .number()
+            .int()
+            .min(1)
+            .max(65535)
+            .default(5432),
+          DATABASE_TYPE: z.literal('postgres'),
+          JWT_SECRET: z.string().nonempty('JWT_SECRET is required'),
+          ADMIN_API_KEY: z.string().nonempty('ADMIN_API_KEY is required'),
+          IS_MODULE_AUTH_ENABLED: z.coerce.boolean(),
+          IS_MODULE_CUSTOMER_ENABLED: z.coerce.boolean(),
+          IS_MODULE_CLAIM_ENABLED: z.coerce.boolean(),
+        }),
+      ]),
+      z.union([
+        z.object({
+          IS_MODULE_ELASTIC_ENABLED: z.coerce.boolean().pipe(z.literal(false)),
+          IS_MODULE_MICHELIN_ENABLED: z.coerce.boolean().pipe(z.literal(false)),
+        }),
+        z.object({
+          IS_MODULE_ELASTIC_ENABLED: z.coerce.boolean().pipe(z.literal(true)),
+          ELASTIC_HOST: z.string().nonempty('ELASTIC_URI is required'),
+          ELASTIC_PORT: z.coerce.number().int().min(1).max(65535).default(9200),
+          IS_MODULE_MICHELIN_ENABLED: z.coerce.boolean(),
+        }),
+      ]),
+    ),
     value: process.env,
   }),
 );

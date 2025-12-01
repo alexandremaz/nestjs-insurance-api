@@ -10,6 +10,7 @@ import { AdminApiKeyAuthGuard } from './guards/admin-api-key-auth.guard';
 import { PartnerApiKeyAuthGuard } from './guards/partner-api-key-auth.guard';
 import { JwtStrategy } from './jwt.strategy';
 import configInjection from '../config/config-injection';
+import assert from 'node:assert';
 
 // Module to handle the authentication of the partners and the admin
 @Module({
@@ -21,10 +22,13 @@ import configInjection from '../config/config-injection';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [configInjection.KEY],
-      useFactory: (config: ConfigType<typeof configInjection>) => ({
-        secret: config.JWT_SECRET,
-        signOptions: { expiresIn: '1h' },
-      }),
+      useFactory: (config: ConfigType<typeof configInjection>) => {
+        assert(config.IS_MODULE_TYPEORM_ENABLED);
+        return {
+          secret: config.JWT_SECRET,
+          signOptions: { expiresIn: '1h' },
+        };
+      },
     }),
     TypeOrmModule.forFeature([Partner]),
   ],

@@ -7,6 +7,7 @@ import {
 import { type ConfigType } from '@nestjs/config';
 import { Request } from 'express';
 import configInjection from '../../config/config-injection';
+import assert from 'node:assert';
 @Injectable()
 export class AdminApiKeyAuthGuard implements CanActivate {
   constructor(
@@ -17,6 +18,7 @@ export class AdminApiKeyAuthGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest<Request>();
     const adminApiKey = request.headers['x-admin-api-key'];
+    assert(this.config.IS_MODULE_TYPEORM_ENABLED);
     return adminApiKey === this.config.ADMIN_API_KEY;
   }
 }

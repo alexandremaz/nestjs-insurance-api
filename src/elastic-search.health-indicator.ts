@@ -4,6 +4,7 @@ import { HttpService } from '@nestjs/axios';
 import { isAxiosError } from 'axios';
 import configInjection from './config/config-injection';
 import type { ConfigType } from '@nestjs/config';
+import assert from 'node:assert';
 
 @Injectable()
 export class ElasticSearchHealthIndicator {
@@ -17,7 +18,8 @@ export class ElasticSearchHealthIndicator {
 
   async isHealthy() {
     const indicator = this.healthIndicatorService.check('elastic-search');
-    const { ELASTIC_HOST: host, ELASTIC_PORT: port } = this.config.elastic;
+    assert(this.config.IS_MODULE_ELASTIC_ENABLED);
+    const { ELASTIC_HOST: host, ELASTIC_PORT: port } = this.config;
     try {
       const {
         status,
