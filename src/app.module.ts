@@ -14,11 +14,12 @@ import { HealthModule } from './health/health.module';
 import { HealthIndicatorService } from '@nestjs/terminus';
 import { ElasticSearchHealthIndicator } from './elastic-search.health-indicator';
 import { HttpService } from '@nestjs/axios';
+import { DocumentsController } from './documents/documents.controller';
 import configInjection from './config/config-injection';
 import assert from 'node:assert';
 
 @Module({
-  controllers: [AppController],
+  controllers: [AppController, DocumentsController],
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
