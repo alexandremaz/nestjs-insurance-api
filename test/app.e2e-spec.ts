@@ -44,6 +44,53 @@ describe('Insurance API (E2E)', () => {
     await app.close();
   }, 10000);
 
+  describe('/documents (three delete routes)', () => {
+    it('should return 200 when deleting by id', async () => {
+      const response: {
+        status: number;
+        body: { message: string };
+      } = await request(app.getHttpServer())
+        .delete('/api/documents/toto')
+        .send();
+
+      expect(response.status).toBe(200);
+
+      expect(response.body).toEqual({
+        message: 'deleteDocumentById',
+      });
+    });
+
+    it('should return 200 when deleting by origin/originId with query params', async () => {
+      const response: {
+        status: number;
+        body: { message: string };
+      } = await request(app.getHttpServer())
+        .delete('/api/documents?origin=ordoclic&originId=1234')
+        .send();
+
+      expect(response.status).toBe(200);
+
+      expect(response.body).toEqual({
+        message: 'deleteDocumentByOriginIdWithQueryParams',
+      });
+    });
+
+    it('should return 200 when deleting by origin/originId with query params', async () => {
+      const response: {
+        status: number;
+        body: { message: string };
+      } = await request(app.getHttpServer())
+        .delete('/api/documents/origin/ordoclic/originId/1234')
+        .send();
+
+      expect(response.status).toBe(200);
+
+      expect(response.body).toEqual({
+        message: 'deleteDocumentByOriginIdWithRouteParams',
+      });
+    });
+  });
+
   describe('/auth (login, create-partner)', () => {
     it('should return 401 when no API key is provided', () => {
       return request(app.getHttpServer()).get('/auth/login').expect(401);

@@ -1,11 +1,13 @@
 import { Controller, Delete, Param, Query } from '@nestjs/common';
-import { DocumentQueryParamsDto } from './documents.dto';
+import { DocumentQueryParamsDto, DocumentResponseDto } from './documents.dto';
+import { ZodSerializerDto } from 'nestjs-zod';
 
 /**
  * Feel free to change the order of the method, to check if router order declaration has any impact here
  */
 
 @Controller('/api')
+@ZodSerializerDto(DocumentResponseDto)
 export class DocumentsController {
   @Delete('/documents')
   deleteDocumentByOriginIdWithQueryParams(
@@ -15,6 +17,10 @@ export class DocumentsController {
       origin,
       originId,
     });
+
+    return {
+      message: 'deleteDocumentByOriginIdWithQueryParams',
+    };
   }
 
   @Delete('/documents/origin/:origin/originId/:originId')
@@ -22,14 +28,22 @@ export class DocumentsController {
     @Param('origin') origin: string,
     @Param('originId') originId: string,
   ) {
-    console.log('delete document by origin/originId with route params', {
+    console.log('delete document by origin/originId with two route params', {
       origin,
       originId,
     });
+
+    return {
+      message: 'deleteDocumentByOriginIdWithRouteParams',
+    };
   }
 
   @Delete('/documents/:id')
   deleteDocumentById(@Param('id') id: string) {
-    console.log('delete document by id', id);
+    console.log('delete document by id with one id route param', id);
+
+    return {
+      message: 'deleteDocumentById',
+    };
   }
 }

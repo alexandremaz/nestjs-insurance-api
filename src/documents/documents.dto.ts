@@ -11,3 +11,9 @@ export class DocumentQueryParamsDto extends createZodDto(
 ) {}
 
 export type DocumentQueryParams = z.infer<typeof documentQueryParamsSchema>;
+
+export const documentResponseSchema = z.object({
+  message: z.string().nonempty(),
+});
+
+export class DocumentResponseDto extends createZodDto(documentResponseSchema) {}
