@@ -2,7 +2,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { HealthIndicatorService } from '@nestjs/terminus';
 import { HttpService } from '@nestjs/axios';
 import { isAxiosError } from 'axios';
-import configInjection from './config/config-injection';
+import configInjection from './config/config-injection.js';
 import type { ConfigType } from '@nestjs/config';
 import assert from 'node:assert';
 

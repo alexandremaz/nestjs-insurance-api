@@ -1,9 +1,11 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, SerializeOptions } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { ZodSerializerDto } from 'nestjs-zod';
-import { SearchQueryParamsDto } from './dto/search-query-params.dto';
-import { SearchResponseDto } from './dto/search-response.dto';
-import { MichelinSearchService } from './michelin-search.service';
+import {
+  searchQueryParamsSchema,
+  type SearchQueryParamsDto,
+} from './dto/search-query-params.dto.js';
+import { searchResponseSchema } from './dto/search-response.dto.js';
+import { MichelinSearchService } from './michelin-search.service.js';
 
 @Controller('michelin-search')
 export class MichelinSearchController {
@@ -14,14 +16,24 @@ export class MichelinSearchController {
   @ApiResponse({
     description: 'Restaurants matching search query',
     status: 200,
-    type: SearchResponseDto,
+    // TODO : fix schema
   })
-  @ZodSerializerDto(SearchResponseDto)
-  async findOne(@Query() { city, cuisine }: SearchQueryParamsDto) {
+  // TODO : fix that later @SerializeOptions({ schema: searchResponseSchema }), for the moment serialize in the controller method (a bit custom)
+  async findOne(
+    @Query({ schema: searchQueryParamsSchema })
+    { city, cuisine }: SearchQueryParamsDto,
+  ) {
+    console.log({ city, cuisine });
+
     const restaurants = await this.michelinSearchService.search({
       city,
       cuisine,
     });
-    return restaurants;
+
+    const transformedRestaurants = searchResponseSchema.parse(restaurants);
+
+    console.log(transformedRestaurants);
+
+    return transformedRestaurants;
   }
 }

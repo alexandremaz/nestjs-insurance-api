@@ -1,7 +1,6 @@
-import { createZodDto } from 'nestjs-zod';
 import z from 'zod';
 
-const createCustomerPartnerPeriodSchema = z.object({
+export const createCustomerPartnerPeriodSchema = z.object({
   endDate: z.iso
     .datetime()
     .transform((isoString) => new Date(isoString))
@@ -13,9 +12,6 @@ const createCustomerPartnerPeriodSchema = z.object({
     .describe('Start date of the period'),
 });
 
-export class CreateCustomerPartnerPeriodDto extends createZodDto(
-  createCustomerPartnerPeriodSchema,
-) {}
-export type CreateCustomerPartnerPeriod = z.infer<
+export type CreateCustomerPartnerPeriodDto = z.infer<
   typeof createCustomerPartnerPeriodSchema
 >;

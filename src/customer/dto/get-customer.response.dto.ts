@@ -1,5 +1,4 @@
-import { createZodDto } from 'nestjs-zod';
-import { z } from 'zod';
+import * as z from 'zod';
 
 const claimSchema = z.object({
   pointValue: z.number(),
@@ -21,6 +20,4 @@ export const customerResponseSchema = customerWithClaimsSchema.transform(
   }),
 );
 
-export class CustomerResponseDto extends createZodDto(customerResponseSchema) {}
-
-export type CustomerResponse = z.infer<typeof customerResponseSchema>;
+export type CustomerResponseDto = z.infer<typeof customerResponseSchema>;

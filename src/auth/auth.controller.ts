@@ -1,18 +1,25 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
-import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ZodSerializerDto } from 'nestjs-zod';
 import {
-  CreatePartnerDto,
-  type CreatePartnerResponse,
-  CreatePartnerResponseDto,
-  type LoginResponse,
-  LoginResponseDto,
-} from './auth.dto';
-import { AuthService } from './auth.service';
-import { GetPartner } from './decorators/get-partner.decorator';
-import { AdminApiKeyAuthGuard } from './guards/admin-api-key-auth.guard';
-import { PartnerApiKeyAuthGuard } from './guards/partner-api-key-auth.guard';
-import { Partner } from './entities/partner.entity';
+  Body,
+  Controller,
+  Get,
+  Post,
+  SerializeOptions,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  type CreatePartnerDto,
+  type CreatePartnerResponseDto,
+  type LoginResponseDto,
+  createPartnerResponseSchema,
+  loginResponseSchema,
+  createPartnerSchema,
+} from './auth.dto.js';
+import { AuthService } from './auth.service.js';
+import { GetPartner } from './decorators/get-partner.decorator.js';
+import { AdminApiKeyAuthGuard } from './guards/admin-api-key-auth.guard.js';
+import { PartnerApiKeyAuthGuard } from './guards/partner-api-key-auth.guard.js';
+import { Partner } from './entities/partner.entity.js';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -30,16 +37,16 @@ export class AuthController {
   @ApiResponse({
     description: 'Partner created successfully',
     status: 201,
-    type: CreatePartnerResponseDto,
+    // TODO : fix schema
   })
   @ApiResponse({
     description: 'Access denied',
     status: 403,
   })
-  @ZodSerializerDto(CreatePartnerResponseDto)
+  @SerializeOptions({ schema: createPartnerResponseSchema })
   async createPartner(
-    @Body() createPartnerDto: CreatePartnerDto,
-  ): Promise<CreatePartnerResponse> {
+    @Body({ schema: createPartnerSchema }) createPartnerDto: CreatePartnerDto,
+  ): Promise<CreatePartnerResponseDto> {
     const apiKey = await this.authService.generatePartnerApiKey(
       createPartnerDto.partnerName,
     );
@@ -56,14 +63,14 @@ export class AuthController {
   @ApiResponse({
     description: 'Login successful',
     status: 200,
-    type: LoginResponseDto,
+    // TODO : fix schema
   })
   @ApiResponse({
     description: 'Access denied',
     status: 403,
   })
-  @ZodSerializerDto(LoginResponseDto)
-  async login(@GetPartner() partner: Partner): Promise<LoginResponse> {
+  @SerializeOptions({ schema: loginResponseSchema })
+  async login(@GetPartner() partner: Partner): Promise<LoginResponseDto> {
     return this.authService.loginPartner(partner);
   }
 }

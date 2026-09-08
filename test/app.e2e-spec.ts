@@ -3,8 +3,8 @@ import { JwtService } from '@nestjs/jwt';
 import { Test, type TestingModule } from '@nestjs/testing';
 import request from 'supertest';
 import { DataSource } from 'typeorm';
-import { AppModule } from '../src/app.module';
-import { type App } from 'supertest/types';
+import { AppModule } from '../src/app.module.js';
+import { App } from 'supertest/types.js';
 
 describe('Insurance API (E2E)', () => {
   let app: INestApplication<App>;
@@ -390,58 +390,59 @@ describe('Insurance API (E2E)', () => {
         })
         .send();
 
+      console.log({ getRestaurantsResponse });
       expect(getRestaurantsResponse.status).toBe(200);
       expect(getRestaurantsResponse.body).toEqual([
         {
+          city: 'New York',
+          cuisine: 'Seafood',
           name: "ZZ's Clam Bar",
-          year: '2019',
           pin: {
             location: {
               lat: '40.727646',
               lon: '-74.00046',
             },
           },
-          city: 'New York',
-          region: 'New York City',
-          zipCode: '10012',
-          cuisine: 'Seafood',
           price: '$$$$',
-          url: 'https://guide.michelin.com/us/en/new-york-state/new-york/restaurant/zz-s-clam-bar',
+          region: 'New York City',
           star: '1',
+          url: 'https://guide.michelin.com/us/en/new-york-state/new-york/restaurant/zz-s-clam-bar',
+          year: '2019',
+          zipCode: '10012',
         },
         {
+          city: 'New York',
+          cuisine: 'Seafood',
           name: 'Marea',
-          year: '2019',
           pin: {
             location: {
               lat: '40.76749',
               lon: '-73.98114',
             },
           },
-          city: 'New York',
-          region: 'New York City',
-          zipCode: '10019',
-          cuisine: 'Seafood',
           price: '$$$$',
-          url: 'https://guide.michelin.com/us/en/new-york-state/new-york/restaurant/marea',
+          region: 'New York City',
           star: '2',
+          url: 'https://guide.michelin.com/us/en/new-york-state/new-york/restaurant/marea',
+          year: '2019',
+          zipCode: '10019',
         },
         {
+          city: 'New York',
+          cuisine: 'Seafood',
           name: 'Le Bernardin',
-          year: '2019',
           pin: {
             location: {
               lat: '40.76177',
               lon: '-73.98223',
             },
           },
-          city: 'New York',
-          region: 'New York City',
-          zipCode: '10019',
-          cuisine: 'Seafood',
           price: '$$$$',
-          url: 'https://guide.michelin.com/us/en/new-york-state/new-york/restaurant/le-bernardin',
+          region: 'New York City',
           star: '3',
+          url: 'https://guide.michelin.com/us/en/new-york-state/new-york/restaurant/le-bernardin',
+          year: '2019',
+          zipCode: '10019',
         },
       ]);
     });

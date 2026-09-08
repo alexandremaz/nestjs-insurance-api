@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Customer } from './customer.entity';
-import type { CreateCustomer } from './dto/create-customer.dto';
-import type { UpdateCustomerDto } from './dto/update-customer.dto';
+import { Customer } from './customer.entity.js';
+import { type CreateCustomerDto } from './dto/create-customer.dto.js';
+import { type UpdateCustomerDto } from './dto/update-customer.dto.js';
 
 @Injectable()
 export class CustomerService {
@@ -12,14 +12,18 @@ export class CustomerService {
     private customerRepository: Repository<Customer>,
   ) {}
 
-  async createCustomer(createCustomerDto: CreateCustomer): Promise<Customer> {
+  async createCustomer(
+    createCustomerDto: CreateCustomerDto,
+  ): Promise<Customer> {
     const customer = this.customerRepository.create(createCustomerDto);
     return await this.customerRepository.save(customer);
   }
 
   async findOneWithClaims(id: number) {
     return this.customerRepository.findOne({
-      relations: ['claims'],
+      relations: {
+        claims: true,
+      },
       where: { id },
     });
   }

@@ -1,6 +1,5 @@
-import { createZodDto } from 'nestjs-zod';
-import { z } from 'zod';
-import { createCustomerSchema } from './create-customer.dto';
+import * as z from 'zod';
+import { createCustomerSchema } from './create-customer.dto.js';
 
 export const updateCustomerSchema = createCustomerSchema.partial().extend({
   email: z.email().optional().describe('The email address of the customer'),
@@ -12,6 +11,4 @@ export const updateCustomerSchema = createCustomerSchema.partial().extend({
     .describe('The full name of the customer'),
 });
 
-export class UpdateCustomerDto extends createZodDto(updateCustomerSchema) {}
-
-export type UpdateCustomer = z.infer<typeof updateCustomerSchema>;
+export type UpdateCustomerDto = z.infer<typeof updateCustomerSchema>;

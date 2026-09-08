@@ -1,7 +1,6 @@
-import { createZodDto } from 'nestjs-zod';
-import { z } from 'zod';
+import * as z from 'zod';
 
-export const searchResponse = z
+export const searchResponseSchema = z
   .array(
     z.object({
       _index: z.literal('michelin'),
@@ -66,4 +65,4 @@ export const searchResponse = z
   )
   .transform((array) => array.map((element) => ({ ...element._source })));
 
-export class SearchResponseDto extends createZodDto(searchResponse) {}
+export type SearchResponseDto = z.infer<typeof searchResponseSchema>;

@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Customer } from '../customer/customer.entity';
-import { CustomerPartnerPeriod } from '../customer/customer-partner-period.entity';
-import { Partner } from './entities/partner.entity';
-import { CreateCustomerPartnerPeriodDto } from './dto/customer-partner-period.dto';
+import { Customer } from '../customer/customer.entity.js';
+import { CustomerPartnerPeriod } from '../customer/customer-partner-period.entity.js';
+import { Partner } from './entities/partner.entity.js';
+import { type CreateCustomerPartnerPeriodDto } from './dto/customer-partner-period.dto.js';
 
 @Injectable()
 export class CustomerPartnerPeriodService {

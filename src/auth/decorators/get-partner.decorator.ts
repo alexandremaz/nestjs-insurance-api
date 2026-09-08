@@ -1,6 +1,6 @@
 import { createParamDecorator, type ExecutionContext } from '@nestjs/common';
 import type { Request } from 'express';
-import type { Partner } from '../entities/partner.entity';
+import type { Partner } from '../entities/partner.entity.js';
 
 // Decorator to get the partner from the request
 export const GetPartner = createParamDecorator(

@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { CustomerPartnerPeriod } from '../../customer/customer-partner-period.entity';
+import { CustomerPartnerPeriod } from '../../customer/customer-partner-period.entity.js';
 
 // Entity to store the partner
 @Entity()

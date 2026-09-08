@@ -1,5 +1,4 @@
-import { createZodDto } from 'nestjs-zod';
-import { z } from 'zod';
+import * as z from 'zod';
 
 export const createCustomerResponseSchema = z.object({
   email: z.email().describe('The customer email address'),
@@ -7,10 +6,6 @@ export const createCustomerResponseSchema = z.object({
   name: z.string().min(1).describe('The customer full name'),
 });
 
-export class CreateCustomerResponseDto extends createZodDto(
-  createCustomerResponseSchema,
-) {}
-
-export type CreateCustomerResponse = z.infer<
+export type CreateCustomerResponseDto = z.infer<
   typeof createCustomerResponseSchema
 >;

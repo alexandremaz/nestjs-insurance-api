@@ -1,6 +1,12 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Partner } from '../auth/entities/partner.entity';
-import { Customer } from './customer.entity';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  type Relation,
+} from 'typeorm';
+import { Partner } from '../auth/entities/partner.entity.js';
+import { Customer } from './customer.entity.js';
 
 @Entity()
 export class CustomerPartnerPeriod {
@@ -8,10 +14,10 @@ export class CustomerPartnerPeriod {
   id: number;
 
   @ManyToOne(() => Customer, (customer) => customer.partnerPeriods)
-  customer: Customer;
+  customer: Relation<Customer>;
 
   @ManyToOne(() => Partner, (partner) => partner.customerPeriods)
-  partner: Partner;
+  partner: Relation<Partner>;
 
   @Column({ type: 'date' })
   startDate: Date;

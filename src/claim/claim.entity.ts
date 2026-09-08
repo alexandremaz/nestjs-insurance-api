@@ -1,5 +1,11 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Customer } from '../customer/customer.entity';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  type Relation,
+} from 'typeorm';
+import { Customer } from '../customer/customer.entity.js';
 
 @Entity()
 // Entity to store a claim of a customer
@@ -17,5 +23,5 @@ export class Claim {
   pointValue: number;
 
   @ManyToOne(() => Customer, (customer) => customer.claims)
-  customer: Customer;
+  customer: Relation<Customer>;
 }

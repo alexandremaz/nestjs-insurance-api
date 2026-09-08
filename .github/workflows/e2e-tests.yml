@@ -26,10 +26,10 @@ jobs:
         run: npm run sort-package-json:check
 
       - name: Run Eslint checks
-        run: npm run lint:check
+        run: npm run lint
 
       - name: Start PostgreSQL database
-        run: docker compose up --wait -d db 
+        run: docker compose up --wait -d db
 
       - name: Start Elasticsearch server
         run: docker compose up --wait -d elastic

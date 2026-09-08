@@ -1,29 +1,37 @@
-import { Logger, Module } from '@nestjs/common';
+import {
+  Logger,
+  Module,
+  StandardSchemaSerializerInterceptor,
+  StandardSchemaValidationPipe,
+} from '@nestjs/common';
 import { ConfigModule, ConfigType, ConditionalModule } from '@nestjs/config';
-import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ZodSerializerInterceptor, ZodValidationPipe } from 'nestjs-zod';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { AuthModule } from './auth/auth.module';
-import { ClaimModule } from './claim/claim.module';
-import { CustomerModule } from './customer/customer.module';
-import { HttpExceptionFilter } from './http-exception.filter';
-import { MichelinSearchModule } from './michelin-search/michelin-search.module';
-import { HealthModule } from './health/health.module';
+import { AppController } from './app.controller.js';
+import { AppService } from './app.service.js';
+import { AuthModule } from './auth/auth.module.js';
+import { ClaimModule } from './claim/claim.module.js';
+import { CustomerModule } from './customer/customer.module.js';
+import { MichelinSearchModule } from './michelin-search/michelin-search.module.js';
+import { HealthModule } from './health/health.module.js';
 import { HealthIndicatorService } from '@nestjs/terminus';
-import { ElasticSearchHealthIndicator } from './elastic-search.health-indicator';
+import { ElasticSearchHealthIndicator } from './elastic-search.health-indicator.js';
 import { HttpService } from '@nestjs/axios';
-import configInjection from './config/config-injection';
+import configInjection from './config/config-injection.js';
 import assert from 'node:assert';
+const __dirname = import.meta.dirname;
 
 @Module({
   controllers: [AppController],
   imports: [
+    // DevtoolsModule.register({
+    //   http: process.env.NODE_ENV !== 'production',
+    // }),
     ConfigModule.forRoot({
       isGlobal: true,
       load: [configInjection],
     }),
+    ConditionalModule.registerWhen(AuthModule, 'IS_MODULE_AUTH_ENABLED'),
     ConditionalModule.registerWhen(
       TypeOrmModule.forRootAsync({
         inject: [configInjection.KEY],
@@ -38,7 +46,7 @@ import assert from 'node:assert';
             DATABASE_TYPE: type,
           } = config;
           return {
-            entities: [`${__dirname}/**/*.entity{.ts,.js}`],
+            autoLoadEntities: true,
             migrations: [`${__dirname}/migrations/*{.ts,.js}`],
             synchronize: true,
             type,
@@ -53,7 +61,6 @@ import assert from 'node:assert';
       'IS_MODULE_CUSTOMER_ENABLED',
     ),
     ConditionalModule.registerWhen(ClaimModule, 'IS_MODULE_CLAIM_ENABLED'),
-    ConditionalModule.registerWhen(AuthModule, 'IS_MODULE_AUTH_ENABLED'),
     ConditionalModule.registerWhen(
       MichelinSearchModule,
       'IS_MODULE_MICHELIN_ENABLED',
@@ -72,18 +79,16 @@ import assert from 'node:assert';
         config: ConfigType<typeof configInjection>,
       ) {
         return {
-          healthIndicators: [
-            ...(config.IS_MODULE_ELASTIC_ENABLED
-              ? [
-                  new ElasticSearchHealthIndicator(
-                    healthIndicatorService,
-                    httpService,
-                    logger,
-                    config,
-                  ),
-                ]
-              : []),
-          ],
+          healthIndicators: config.IS_MODULE_ELASTIC_ENABLED
+            ? [
+                new ElasticSearchHealthIndicator(
+                  healthIndicatorService,
+                  httpService,
+                  logger,
+                  config,
+                ),
+              ]
+            : [],
         };
       },
     }),
@@ -92,16 +97,18 @@ import assert from 'node:assert';
     AppService,
     {
       provide: APP_PIPE,
-      useClass: ZodValidationPipe,
+      useValue: new StandardSchemaValidationPipe({
+        transform: true,
+      }),
     },
     {
       provide: APP_INTERCEPTOR,
-      useClass: ZodSerializerInterceptor,
+      useClass: StandardSchemaSerializerInterceptor,
     },
-    {
-      provide: APP_FILTER,
-      useClass: HttpExceptionFilter,
-    },
+    // TODO : see if an app filter is still necessary {
+    //   provide: APP_FILTER,
+    //   useClass: HttpExceptionFilter,
+    // },
   ],
 })
 export class AppModule {}
