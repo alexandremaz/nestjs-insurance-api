@@ -1,6 +1,12 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Claim } from '../claim/claim.entity';
-import { CustomerPartnerPeriod } from './customer-partner-period.entity';
+import {
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  type Relation,
+} from 'typeorm';
+import { Claim } from '../claim/claim.entity.js';
+import { CustomerPartnerPeriod } from './customer-partner-period.entity.js';
 
 @Entity()
 // Entity to store a customer
@@ -15,7 +21,7 @@ export class Customer {
   name: string;
 
   @OneToMany(() => Claim, (claim) => claim.customer)
-  claims: Claim[];
+  claims: Relation<Claim[]>;
 
   @OneToMany(() => CustomerPartnerPeriod, (period) => period.customer)
   partnerPeriods: CustomerPartnerPeriod[];

@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { type ConfigType } from '@nestjs/config';
 import { Request } from 'express';
-import configInjection from '../../config/config-injection';
+import configInjection from '../../config/config-injection.js';
 import assert from 'node:assert';
 @Injectable()
 export class AdminApiKeyAuthGuard implements CanActivate {

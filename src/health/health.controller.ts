@@ -1,8 +1,8 @@
 import { Controller, Get, Inject } from '@nestjs/common';
 import { HealthCheckService, HealthCheck } from '@nestjs/terminus';
 
-import { MODULE_OPTIONS_TOKEN } from './health.module-definition';
-import type { HealthModuleOptions } from './health.interface';
+import { MODULE_OPTIONS_TOKEN } from './health.module-definition.js';
+import { type HealthModuleOptions } from './health.interface.js';
 
 @Controller('health')
 export class HealthController {
@@ -16,7 +16,7 @@ export class HealthController {
   check() {
     return this.health.check(
       this.options.healthIndicators.map(
-        (healthIndicator) => async () => healthIndicator.isHealthy(),
+        (healthIndicator) => healthIndicator.isHealthy,
       ),
     );
   }

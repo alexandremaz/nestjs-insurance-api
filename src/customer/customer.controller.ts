@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Request,
+  SerializeOptions,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -16,15 +17,23 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { ZodSerializerDto } from 'nestjs-zod';
-import { CustomerPartnerPeriodService } from '../auth/customer-partner-period.service';
-import { CreateCustomerPartnerPeriodDto } from '../auth/dto/customer-partner-period.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { CustomerService } from './customer.service';
-import { CreateCustomerDto } from './dto/create-customer.dto';
-import { CreateCustomerResponseDto } from './dto/create-customer.response.dto';
-import { CustomerResponseDto } from './dto/get-customer.response.dto';
-import { UpdateCustomerDto } from './dto/update-customer.dto';
+import { CustomerPartnerPeriodService } from '../auth/customer-partner-period.service.js';
+import {
+  createCustomerPartnerPeriodSchema,
+  type CreateCustomerPartnerPeriodDto,
+} from '../auth/dto/customer-partner-period.dto.js';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
+import { CustomerService } from './customer.service.js';
+import {
+  type CreateCustomerDto,
+  createCustomerSchema,
+} from './dto/create-customer.dto.js';
+import { createCustomerResponseSchema } from './dto/create-customer.response.dto.js';
+import { customerResponseSchema } from './dto/get-customer.response.dto.js';
+import {
+  updateCustomerSchema,
+  type UpdateCustomerDto,
+} from './dto/update-customer.dto.js';
 
 @ApiTags('Customers')
 @Controller('customers')
@@ -42,14 +51,17 @@ export class CustomerController {
   @ApiResponse({
     description: 'Customer created successfully',
     status: 201,
-    type: CreateCustomerResponseDto,
+    // TODO : fix schema
   })
   @ApiResponse({
     description: 'Invalid data',
     status: 400,
   })
-  @ZodSerializerDto(CreateCustomerResponseDto)
-  async create(@Body() createCustomerDto: CreateCustomerDto) {
+  @SerializeOptions({ schema: createCustomerResponseSchema })
+  async create(
+    @Body({ schema: createCustomerSchema })
+    createCustomerDto: CreateCustomerDto,
+  ) {
     const customer =
       await this.customerService.createCustomer(createCustomerDto);
     return customer;
@@ -60,13 +72,13 @@ export class CustomerController {
   @ApiResponse({
     description: 'Customer found',
     status: 200,
-    type: CustomerResponseDto,
+    // TODO : fix schema
   })
   @ApiResponse({
     description: 'Customer not found',
     status: 404,
   })
-  @ZodSerializerDto(CustomerResponseDto)
+  @SerializeOptions({ schema: customerResponseSchema })
   async findOne(@Param('id') id: number) {
     const customer = await this.customerService.findOneWithClaims(id);
     if (!customer) {
@@ -80,15 +92,17 @@ export class CustomerController {
   @ApiResponse({
     description: 'Customer updated successfully',
     status: 200,
-    type: CustomerResponseDto,
+    // TODO : fix schema
   })
   @ApiResponse({
     description: 'Customer not found',
     status: 404,
   })
+  @SerializeOptions({ schema: customerResponseSchema })
   async update(
     @Param('id') id: number,
-    @Body() updateCustomerDto: UpdateCustomerDto,
+    @Body({ schema: updateCustomerSchema })
+    updateCustomerDto: UpdateCustomerDto,
   ) {
     return await this.customerService.update(id, updateCustomerDto);
   }
@@ -115,7 +129,8 @@ export class CustomerController {
   })
   async createContract(
     @Param('id') customerId: number,
-    @Body() createContractDto: CreateCustomerPartnerPeriodDto,
+    @Body({ schema: createCustomerPartnerPeriodSchema })
+    createContractDto: CreateCustomerPartnerPeriodDto,
     @Request() req: { user: { id: number } },
   ) {
     return await this.periodService.create(

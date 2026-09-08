@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Customer } from '../customer/customer.entity';
-import { Claim } from './claim.entity';
-import type { BatchCreateClaimDto } from './dto/batch-create-claims.dto';
-import type { CreateClaimDto } from './dto/create-claim.dto';
+import { Customer } from '../customer/customer.entity.js';
+import { Claim } from './claim.entity.js';
+import { type BatchCreateClaimsDto } from './dto/batch-create-claims.dto.js';
+import { type CreateClaimDto } from './dto/create-claim.dto.js';
 
 @Injectable()
 export class ClaimService {
@@ -35,7 +35,7 @@ export class ClaimService {
   }
 
   async batchCreateClaims(
-    batchCreateClaimDto: BatchCreateClaimDto,
+    batchCreateClaimsDto: BatchCreateClaimsDto,
     customerId: number,
   ): Promise<Claim[]> {
     const customer = await this.customerRepository.findOne({
@@ -44,7 +44,7 @@ export class ClaimService {
     if (!customer) {
       throw new NotFoundException('Customer not found');
     }
-    const claims = batchCreateClaimDto.claims.map((dto) =>
+    const claims = batchCreateClaimsDto.claims.map((dto) =>
       this.claimRepository.create({
         ...dto,
         customer,

@@ -4,8 +4,8 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { AuthService } from '../auth.service';
-import type { Partner } from '../entities/partner.entity';
+import { AuthService } from '../auth.service.js';
+import type { Partner } from '../entities/partner.entity.js';
 import { Request } from 'express';
 @Injectable()
 export class PartnerApiKeyAuthGuard implements CanActivate {

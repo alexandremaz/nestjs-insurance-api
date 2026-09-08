@@ -1,7 +1,6 @@
 {
   "recommendations": [
-    "hashicorp.terraform",
     "esbenp.prettier-vscode",
-    "dbaeumer.vscode-eslint"
+    "ms-azuretools.vscode-containers"
   ]
 }

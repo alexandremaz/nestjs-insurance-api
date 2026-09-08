@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import type { ConfigType } from '@nestjs/config';
-import { MichelinSearchController } from './michelin-search.controller';
-import { MichelinSearchService } from './michelin-search.service';
-import configInjection from '../config/config-injection';
+import { MichelinSearchController } from './michelin-search.controller.js';
+import { MichelinSearchService } from './michelin-search.service.js';
+import configInjection from '../config/config-injection.js';
 import assert from 'node:assert';
 
 @Module({

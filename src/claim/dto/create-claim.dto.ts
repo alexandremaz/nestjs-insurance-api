@@ -1,5 +1,4 @@
-import { createZodDto } from 'nestjs-zod';
-import { z } from 'zod';
+import * as z from 'zod';
 
 export const createClaimSchema = z.object({
   description: z.string().trim().describe('Detailed description of the claim'),
@@ -11,6 +10,4 @@ export const createClaimSchema = z.object({
   title: z.string().trim().min(1).describe('The title of the claim'),
 });
 
-export class CreateClaimDto extends createZodDto(createClaimSchema) {}
-
-export type CreateClaim = z.infer<typeof createClaimSchema>;
+export type CreateClaimDto = z.infer<typeof createClaimSchema>;

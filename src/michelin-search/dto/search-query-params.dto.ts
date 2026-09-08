@@ -1,7 +1,6 @@
-import { createZodDto } from 'nestjs-zod';
-import { z } from 'zod';
+import * as z from 'zod';
 
-export const searchQueryParams = z.object({
+export const searchQueryParamsSchema = z.object({
   city: z
     .string()
     .trim()
@@ -14,4 +13,4 @@ export const searchQueryParams = z.object({
     .describe('Cuisine of the restaurants we are looking for'),
 });
 
-export class SearchQueryParamsDto extends createZodDto(searchQueryParams) {}
+export type SearchQueryParamsDto = z.infer<typeof searchQueryParamsSchema>;

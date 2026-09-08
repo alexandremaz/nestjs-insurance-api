@@ -26,6 +26,8 @@ export function validateEnvWithZod<T>({
     throw new Error('Invalid environment variables');
   }
 
+  console.log('environment : ', safeParseResult.data);
+
   return safeParseResult.data;
 }
 

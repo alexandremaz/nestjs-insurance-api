@@ -1,7 +1,6 @@
-import { createZodDto } from 'nestjs-zod';
-import { z } from 'zod';
+import * as z from 'zod';
 
-const claimResponseSchema = z
+export const claimResponseSchema = z
   .object({
     customer: z.object({
       id: z
@@ -24,6 +23,4 @@ const claimResponseSchema = z
     customerId: customer.id,
   }));
 
-export class ClaimResponseDto extends createZodDto(claimResponseSchema) {}
-
-export type ClaimResponse = z.infer<typeof claimResponseSchema>;
+export type ClaimResponseDto = z.infer<typeof claimResponseSchema>;
