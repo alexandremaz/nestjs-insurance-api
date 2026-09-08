@@ -1,13 +1,15 @@
 {
-  "editor.formatOnSave": true,
+  "[dockerfile]": {
+    "editor.defaultFormatter": "ms-azuretools.vscode-containers"
+  },
+  "chat.disableAIFeatures": true,
   "editor.codeActionsOnSave": {
     "source.fixAll": "always"
   },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
   "js/ts.preferences.importModuleSpecifier": "relative",
   "js/ts.tsdk.path": "node_modules/typescript/lib",
   "js/ts.tsdk.promptToUseWorkspaceVersion": true,
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "[dockerfile]": {
-    "editor.defaultFormatter": "ms-azuretools.vscode-containers"
-  }
+  "terminal.integrated.tabs.allowAgentCliTitle": false
 }
